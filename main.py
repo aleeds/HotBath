@@ -1,5 +1,6 @@
 import lattice
 import person
+import itertools
 
 class Big:
     """This class will contain everything needed to run the simulation. It'll
@@ -20,6 +21,9 @@ class Big:
 
     # Int
     cur_lattice = 0
+
+
+
 
     # just sets the variables. Need to come up with an elegant way to describe
     #the shape of the tub, that will allow us to raise the amount of lattice
@@ -45,15 +49,16 @@ class Big:
         for t in (0,max_time_step):
             step()
             if t % draw_save == 0:
-                draw()
+                draw(int(self.y_size))
                 save_drawing()
 
     # This function simply gets the neighbors of the Node node.
     # Node -> [Node]
     def get_neighbors(self,node):
-        # fill this in.
-        print "I am not a complete function yet!\n Do not use me\n\n\n"
-        print "This was a message from get_neighbors"
+        nodes = []
+        for (a,b,c) in node.neighbor_indices:
+            nodes += lattices[cur_lattice][a][b][c]
+        return nodes
 
     # [Nodes] -> [Nodes]
     # TODO(aleeds) maybe do this last
@@ -92,3 +97,6 @@ class Big:
         fig = plt.gcf()
         plt.clim()
         plt.title("Temperature of Bathtub")
+
+
+b = Big(30,30,30)
