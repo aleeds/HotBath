@@ -18,6 +18,14 @@ class Big:
     # Int
     cur_lattice = 0
 
+    # just sets the variables. Need to come up with an elegant way to describe
+    #the shape of the tub, that will allow us to raise the amount of lattice
+    #nodes
+    def __init__(self,x_size,y_size,z_size):
+        self.x_size = x_size
+        self.y_size = y_size
+        self.z_size = z_size
+
     # Just switches which lattice is being used. Will be called after every
     # time step.
     # Void -> Void
@@ -51,13 +59,14 @@ class Big:
         print "This was a message from UpdateBodyStatus"
 
     # This will step forward the sim by 1 timestep. I used 2 level indents to
-    # me more room per line.
+    # me more room per line. This just runs throu
     def step(self):
-        for x in (0,x_size):
-            for y in (0,y_size):
-                for z in (0,z_size):
+        for x in (0,self.x_size):
+            for y in (0,self.y_size):
+                for z in (0,self.z_size):
                     node = lattices[cur_lattice][x][y][z].copy()
                     neighbors = UpdateBodyStatus(get_neighbors(node))
                     node.Update(neighbors)
                     lattices[next_lattice()][x][y][z] = node
         person.step()
+        switch_lattice()
