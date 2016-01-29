@@ -1,3 +1,6 @@
+import lattice
+import person
+
 class Big:
     """This class will contain everything needed to run the simulation. It'll
     contain the lattice nodes, the various run functions, etc. All of my type
@@ -53,6 +56,7 @@ class Big:
         print "This was a message from get_neighbors"
 
     # [Nodes] -> [Nodes]
+    # TODO(aleeds) maybe do this last
     def UpdateBodyStatus(self,neighbors):
         # fill this in
         print "I am not a complete function yet!\n Do not use me\n\n\n"
