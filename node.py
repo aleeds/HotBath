@@ -21,6 +21,7 @@ class Vector:
 
 
 class InterpolationArray:
+  """Class to hold values and interpolation between them with float indicies"""
   values = {0: 561.0, 10: 580.0, 20: 598.4, 30: 615.4, 40: 630.5,
             50: 643.5, 60: 654.3, 70: 663.1, 80: 670.0, 90: 675.3, 100: 679.1}
   #Float -> Float
@@ -35,7 +36,6 @@ class InterpolationArray:
 
 #Global constants
 water_k = InterpolationArray()
-d = 1.0              #thickness of material
 Hc = 1.0             #Heat transfer constant air->water
 
 
@@ -56,15 +56,17 @@ class Node(Lattice):
 
   Area = 0.0                  #Float
   Weight = 0.0                #Float
+  d = 0.0                     #Float
 
   pos = Vector(0, 0, 0)  #Vector(Int, Int, Int)
 
-  def __init__(self, t, s, xx, yy, zz, a, w):
+  def __init__(self, t, s, xx, yy, zz, a, w, dd):
     self.temp = t
     self.state = s
     self.pos = Vector(xx, yy, zz)
     self.Area = a
     self.Weight = w
+    self.d = dd
 
   #Node -> Float
   def air_water(self, n):
@@ -80,7 +82,7 @@ class Node(Lattice):
   #Node -> Float
   def water_water(self, n):
     time_step = 1
-    return water_k[self.temp]*self.A*(self.temp - n.temp)*time_step/d
+    return water_k[self.temp]*self.A*(self.temp - n.temp)*time_step/self.d
 
   #This will update the temperature of the node based on the time step and neighboring nodes
   #[Node] -> Unit
