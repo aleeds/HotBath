@@ -69,8 +69,26 @@ class Big:
             for y in (0,self.y_size):
                 for z in (0,self.z_size):
                     node = lattices[cur_lattice][x][y][z].copy()
-                    neighbors = UpdateBodyStatus(get_neighbors(node))
+                    neighbors = get_neighbors(node)
                     node.Update(neighbors)
                     lattices[next_lattice()][x][y][z] = node
-        person.step()
+        # This will pertubate all the temperatures of the nodes selected
+        lattice[next_lattice()] = person.step(lattice[next_lattice()])
         switch_lattice()
+
+    # This function will draw the data using matplotlib, plt.imshow() as used
+    # the webpage
+    # http://matplotlib.org/examples/pylab_examples/animation_demo.html
+    # It will slice into the ndarray, pull out the temperatures, and then
+    # display it.
+    # Int -> Void
+    # This slice will the slice from faucet side to the back of the individual
+    # leaning against the far side of the tub.
+    def draw(self, slice_ind):
+        slice_node = GetSlice(slice_ind)
+        # standard 2d python list of floats or whatever
+        slice_temp = GetTemps(slice_node)
+        p = plt.imshow(slice_temp)
+        fig = plt.gcf()
+        plt.clim()
+        plt.title("Temperature of Bathtub")
