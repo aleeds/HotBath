@@ -179,7 +179,7 @@ class Big:
         #slice_temp = [[int(i) for i in row] for row in slice_temp]
 
         #print slice_temp
-        p = plt.imshow(slice_temp,cmap = "hot")
+        p = plt.imshow(slice_temp,cmap = "gray")
         plt.colorbar()
         fig = plt.gcf()
         plt.clim()
@@ -210,7 +210,7 @@ def BuildLatticeRectangularTub(x,y,z,volume_node,body):
                 elif i in wallx or j in wally or k in wallz:
                     lattice[i][j][k] = Boundary(i,j,k)
                 elif k in [0,1]:
-                    lattice[i][j][k] = Node(def_temp - 30,0,i,j,k,
+                    lattice[i][j][k] = Node(def_temp / 4,0,i,j,k,
                                             volume_node ** (2./ 3),
                                             volume_node,1)
                 else:
