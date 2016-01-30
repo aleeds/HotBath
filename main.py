@@ -1,3 +1,13 @@
+# TODO Mixing by the person, by time/bath condition/etc
+# TODO Adding the person
+# TODO draw the line for da waater
+# TODO better drawing of da water
+# TODO begin experimenting with the various conditions, making sure it matches
+# real life.
+# TODO scaly scale
+# TODO the paper, the actual modelling. 
+
+
 import lattice
 from node import Node
 from node import Boundary
@@ -39,8 +49,8 @@ class Big:
         self.z_size = z_size
         self.lattices[0] = lattice
         self.lattices[1] = lattice
-        self.faucet_x = 3
-        self.faucet_y = 4
+        self.faucet_x = self.x_size / 2
+        self.faucet_y = 2
         self.faucet_width = 1
         self.faucet_length = 1
         self.faucet_temp = 90
@@ -60,11 +70,11 @@ class Big:
       for d in range(0, node_depth):
         for xx in range(max(width-x, 0), width+x):  #might be negative
           for yy in range(max(y-width, 0), y+width):  #might be negative
-            self.lattices[self.cur_lattice][xx][yy][d].temp = temp 
+            self.lattices[self.cur_lattice][xx][yy][d].temp = temp
 
-            
-          
-        
+
+
+
 
     # Simulates for t timesteps. It'll draw and save a frame every draw_save
     # timesteps.
@@ -123,7 +133,16 @@ class Big:
 
 
     def GetSlice(self,index):
-        return self.lattices[self.cur_lattice][index]
+      ret = []
+    #   for i in range(0,self.x_size):
+    #     tmp = []
+    #     for j in range(0,self.y_size):
+    #       if j == index:
+    #         for k in range(0,self.z_size):
+    #           tmp.append(self.lattices[self.cur_lattice][i][j][k])
+    #     ret.append(tmp)
+
+      return self.lattices[self.cur_lattice][index]
 
     def GetTemps(self,nodes):
         temps = []
@@ -175,7 +194,7 @@ def BuildLatticeRectangularTub(x,y,z,volume_node):
                 if i in wallx or j in wally or k in wallz:
                     lattice[i][j][k] = Boundary(i,j,k)
                 elif k in [0,1]:
-                    lattice[i][j][k] = Node(def_temp / 10,0,i,j,k,
+                    lattice[i][j][k] = Node(def_temp - 20,0,i,j,k,
                                             volume_node ** (2./ 3),
                                             volume_node,1)
                 else:
@@ -188,9 +207,9 @@ def BuildLatticeRectangularTub(x,y,z,volume_node):
     return lattice
 
 
-x = 11
-y = 20 
-z = 13
+x = 20
+y = 30
+z = 10
 
 b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1))
 b.Main(1000,100)
