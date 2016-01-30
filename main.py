@@ -236,8 +236,10 @@ def make_body(body_x, body_y, body_z, x_width, y_length, z_height):
   temp = [(i,j,k) for i in range(body_x, body_x + x_width)
                   for j in range(body_y, body_y + y_length)
                   for k in range(0, body_z)]
-
+  
   body += temp
+  body = list(set(body)) 
+  
   return body
 
 def GetRandomWater(lattice):
@@ -289,4 +291,4 @@ body = make_body(body_pos_x, body_pos_y, body_pos_z, body_width, body_length, bo
 
 
 b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body))
-b.Main(1000,100)
+b.Main(1000,10)
