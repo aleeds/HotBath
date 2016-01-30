@@ -72,7 +72,7 @@ class Big:
 
 
 
-
+    # Swap out how it mixes whenever we want to
     def MixingFrequency(self,t,freq):
         if (t + 1) % freq == 0:
             MixingOne(self.lattices[self.cur_lattice])
@@ -229,7 +229,7 @@ def make_body(body_x, body_y, body_z, x_width, y_length, z_height, x, y, z):
                   for j in range(y-y_length, y-2)
                   for k in range(z-z_height, z-2)]
   print str(len(body))
-                  
+
   temp = [(i,j,k) for i in range(body_x - x_width, body_x)
                   for j in range(body_y - y_length, body_y)
                   for k in range(0,z-2)]
@@ -237,7 +237,7 @@ def make_body(body_x, body_y, body_z, x_width, y_length, z_height, x, y, z):
   body.append(temp)
   print str(len(body))
   return body
-  
+
 def GetRandomWater(lattice):
     node = lattice[0][0][0]
     while node.isBoundary or node.state != 2:
@@ -260,8 +260,14 @@ def MixingOne(lattice):
 # This mixing function will move the temperatures of water close to the faucet
 # to temperatures close to the body, and vice versa. This will simulate a
 # lateral movement from the front to the back
-def MixingTwo(lattice):
-    print "Write this"
+def MixingTwo(lattice,lens):
+    y_size = len(lattice[0])
+    for plane in lattice:
+        for line in plane:
+            for node in line:
+                if not node.isBoundary and node.state == 2:
+                    pos = node.pos
+                    node.temp = lattice[pos.x][(pos.y + lens) % y_size ][pos.z].temp
 
 
 x = 20
