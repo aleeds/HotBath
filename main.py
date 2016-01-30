@@ -1,6 +1,9 @@
 import lattice
+from node import Node
+from node import Boundary
 import person
 import itertools
+import matplotlib.pyplot as plt
 
 class Big:
     """This class will contain everything needed to run the simulation. It'll
@@ -11,7 +14,8 @@ class Big:
     # model efficiency. This will get initialized in init, just wanted to have
     # it here too for cleanliness.
     # ([[[Node]]],[[[Node]]])
-    lattices = ([],[])
+    # This is technically a list cause apparently tuples are static.
+    lattices = [[],[]]
 
     # The sizes will get initialized in init
     # Int
@@ -28,16 +32,18 @@ class Big:
     # just sets the variables. Need to come up with an elegant way to describe
     #the shape of the tub, that will allow us to raise the amount of lattice
     #nodes
-    def __init__(self,x_size,y_size,z_size):
+    def __init__(self,x_size,y_size,z_size,lattice):
         self.x_size = x_size
         self.y_size = y_size
         self.z_size = z_size
+        self.lattices[0] = lattice
+        self.lattices[1] = lattice
 
     # Just switches which lattice is being used. Will be called after every
     # time step.
     # Void -> Void
     def switch_lattice(self):
-        self.cur_lattice = next_lattice()
+        self.cur_lattice = self.next_lattice()
 
     def next_lattice(self):
         return (self.cur_lattice + 1) % 2
@@ -47,17 +53,17 @@ class Big:
     # Int -> Int -> Void
     def Main(self,max_time_step,draw_save = 10000):
         for t in (0,max_time_step):
-            step()
+            self.step()
             if t % draw_save == 0:
-                draw(int(self.y_size))
-                save_drawing()
+                self.draw(int(self.y_size))
+                plt.savefig("first.png")
 
     # This function simply gets the neighbors of the Node node.
     # Node -> [Node]
     def get_neighbors(self,node):
         nodes = []
         for (a,b,c) in node.neighbor_indices:
-            nodes += lattices[cur_lattice][a][b][c]
+            nodes += self.lattices[self.cur_lattice][a][b][c]
         return nodes
 
     # [Nodes] -> [Nodes]
@@ -69,18 +75,27 @@ class Big:
 
     # This will step forward the sim by 1 timestep. I used 2 level indents to
     # me more room per line. This just runs throu
-    def step(self):
-        for x in (0,self.x_size):
-            for y in (0,self.y_size):
-                for z in (0,self.z_size):
-                    node = lattices[cur_lattice][x][y][z].copy()
-                    neighbors = get_neighbors(node)
-                    node.Update(neighbors)
-                    lattices[next_lattice()][x][y][z] = node
-        # This will pertubate all the temperatures of the nodes selected
-        lattice[next_lattice()] = person.step(lattice[next_lattice()])
-        switch_lattice()
 
+    def step(self):
+        for x in range(0,self.x_size):
+            for y in range(0,self.y_size):
+                for z in range(0,self.z_size):
+                    # may need to make copy function
+                    node = self.lattices[self.cur_lattice][x][y][z]
+                    if not node.isBoundary and node.state == 2:
+                      neighbors = self.get_neighbors(node)
+                      node.Update(neighbors)
+                      self.lattices[self.next_lattice()][x][y][z] = node
+        # This will pertubate all the temperatures of the nodes selected
+        # self.lattices[self.next_lattice()] = person.step(self.lattices[self.next_lattice()])
+        self.switch_lattice()
+
+
+    def GetSlice(self,index):
+        return [[0,0],[0,0]]
+
+    def GetTemps(self,nodes):
+        return [[0,0],[0,0]]
     # This function will draw the data using matplotlib, plt.imshow() as used
     # the webpage
     # http://matplotlib.org/examples/pylab_examples/animation_demo.html
@@ -90,13 +105,45 @@ class Big:
     # This slice will the slice from faucet side to the back of the individual
     # leaning against the far side of the tub.
     def draw(self, slice_ind):
-        slice_node = GetSlice(slice_ind)
+        slice_node = self.GetSlice(slice_ind)
         # standard 2d python list of floats or whatever
-        slice_temp = GetTemps(slice_node)
+        slice_temp = self.GetTemps(slice_node)
         p = plt.imshow(slice_temp)
         fig = plt.gcf()
         plt.clim()
         plt.title("Temperature of Bathtub")
 
 
-b = Big(30,30,30)
+
+def_temp = 40
+
+def volume_tub(x,y,z,volume_node):
+    return x * y * z * volume_node
+
+def BuildLatticeRectangularTub(x,y,z,volume_node):
+    lattice = [[[0]*x]*y]*z
+    for i in range(0,x):
+        for j in range(0,y):
+            for k in range(0,z):
+                wallx = [0,1,x - 2, x - 1]
+                wally = [0,1,y - 2, y - 1]
+                wallz = [z - 2, z - 1]
+                if i in wallx or j in wally or k in wallz:
+                    lattice[i][j][k] = Boundary(i,j,k)
+                elif k in [0,1]:
+                    lattice[i][j][k] = Node(def_temp,0,i,j,k,
+                                            volume_node ** (2./ 3),
+                                            volume_node,1)
+                else:
+                    lattice[i][j][k] = Node(def_temp,2,i,j,k,
+                                            volume_node ** (2./ 3),
+                                            volume_node,1)
+    return lattice
+
+
+x = 30
+y = 30
+z = 30
+
+b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1))
+b.Main(10)

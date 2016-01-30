@@ -1,5 +1,6 @@
 from lattice import Lattice
 import math
+import itertools
 class Vector:
   """This class will hold a node's position in 3d space"""
   #Positions will be initialized in init
@@ -28,7 +29,7 @@ class InterpolationArray:
   def __getitem__(self, i):
     i_below = math.floor(i/10.0)*10
     i_above = math.ceil(i/10.0)*10
-    i -= i_below 
+    i -= i_below
     i /= 10
     return self.values[i_below]*i + self.values[i_above]*(1-i)
 
@@ -57,8 +58,10 @@ class Node(Lattice):
   Area = 0.0                  #Float
   Weight = 0.0                #Float
   d = 0.0                     #Float
-
+  neighbor_indices = []
   pos = Vector(0, 0, 0)  #Vector(Int, Int, Int)
+
+  isBoundary = False
 
   def __init__(self, t, s, xx, yy, zz, a, w, dd):
     self.temp = t
@@ -67,13 +70,20 @@ class Node(Lattice):
     self.Area = a
     self.Weight = w
     self.d = dd
+    ps = [[1,-1,0],[1,-1,0],[1,-1,0]]
+    self.neighbor_indices = list(itertools.product(*ps))
+    self.neighbor_indices.remove((0,0,0))
+    tmp = [(xx + a,yy + b,zz + c) for (a,b,c) in self.neighbor_indices]
+    self.neighbor_indices = tmp
+
+
 
   #Node -> Float
   def air_water(self, n):
     q = Hc * self.Area * (self.temp - n.temp)
     return q
     #might need standard conduction
-      
+
   #Node -> Float
   def body_water(self, n):
     print "body water"
@@ -97,7 +107,7 @@ class Node(Lattice):
           deltaQ += air_water(n)
       elif(self.state == 1): #body
         if(n.state == 2):         #body -> water
-          deltaQ += body_water(n)     
+          deltaQ += body_water(n)
       else:                 #water
         if(n.state == 0):   #water -> air
           deltaQ += air_water(n)
@@ -107,9 +117,9 @@ class Node(Lattice):
           deltaQ += water_water(n)
 
     self.temp -= deltaQ/self.Weight
-        
 
-  #Returns the state mapped to the appropiate string based on earlier documentation 
+
+  #Returns the state mapped to the appropiate string based on earlier documentation
   #[Unit] -> [String]
   def get_state(self):
     if(self.state == 0):
@@ -117,13 +127,23 @@ class Node(Lattice):
     elif(self.state == 1):
       return "Body"
     else:
-      return "Water"  
+      return "Water"
 
   #Returns string version of Node
   def __str__(self):
     return "(" + str(self.temp) + "," + self.get_state() + "," + str(self.pos) + ")"
 
 
-n = Node(88.88888, 2, 1,2,3, 100,10)
-print str(water_k[n.temp])
+class Boundary(Lattice):
+    # x,y,z coords
+    x = 0
+    y = 0
+    z = 0
+    isBoundary = True
+    def __init__(self,x,y,z):
+        self.x = x
+        self.y = y
+        self.z = z
 
+# n = Node(88.88888, 2, 1,2,3, 100,10)
+# print str(water_k[n.temp])
