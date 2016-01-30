@@ -168,7 +168,7 @@ class Big:
             temp_row = []
             for node in row:
                 if node.isIndicator:
-                    temp_row.append(100)
+                    temp_row.append(self.faucet_temp)
                 else:
                     temp_row.append(node.temp)
             temps.append(temp_row)
@@ -210,7 +210,7 @@ class Big:
         #slice_temp = [[int(i) for i in row] for row in slice_temp]
 
         #print slice_temp
-        p = plt.imshow(slice_temp,cmap = "bwr")
+        p = plt.imshow(slice_temp,cmap = "gray")
         plt.colorbar()
         fig = plt.gcf()
         plt.clim()
