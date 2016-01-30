@@ -5,7 +5,7 @@
 # TODO begin experimenting with the various conditions, making sure it matches
 # real life.
 # TODO scaly scale
-# TODO the paper, the actual modelling. 
+# TODO the paper, the actual modelling.
 
 
 import lattice
@@ -183,7 +183,7 @@ def_temp = 40
 def volume_tub(x,y,z,volume_node):
     return x * y * z * volume_node
 
-def BuildLatticeRectangularTub(x,y,z,volume_node):
+def BuildLatticeRectangularTub(x,y,z,volume_node,body):
     lattice = [[[0 for i in range(z)] for j in range(y)] for k in range(x)]
     wallx = [0, 1, x - 2, x - 1]
     wally = [0, 1, y - 2, y - 1]
@@ -191,14 +191,19 @@ def BuildLatticeRectangularTub(x,y,z,volume_node):
     for i in range(0,x):
         for j in range(0,y):
             for k in range(0,z):
-                if i in wallx or j in wally or k in wallz:
+                if (i,j,k) in body:
+                    lattice[i][j][k] = Node(37,
+                                            1,i,j,k,
+                                            volume_node ** (2./ 3),
+                                            volume_node,4) # this is the size of skin
+                elif i in wallx or j in wally or k in wallz:
                     lattice[i][j][k] = Boundary(i,j,k)
                 elif k in [0,1]:
                     lattice[i][j][k] = Node(def_temp - 20,0,i,j,k,
                                             volume_node ** (2./ 3),
                                             volume_node,1)
                 else:
-                    lattice[i][j][k] = Node(def_temp + random.randrange(-20,20),
+                    lattice[i][j][k] = Node(def_temp + random.randrange(-1,1),
                                             2,i,j,k,
                                             volume_node ** (2./ 3),
                                             volume_node,1)
@@ -211,5 +216,5 @@ x = 20
 y = 30
 z = 10
 
-b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1))
+b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body))
 b.Main(1000,100)

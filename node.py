@@ -87,8 +87,7 @@ class Node(Lattice):
 
   #Node -> Float
   def body_water(self, n):
-    print "body water"
-    #TODO
+    return water_k[self.temp]/100000.0*self.Area*(self.temp - n.temp)*time_step/(self.d * n.d)
 
   #Node -> Float
   def water_water(self, n):
