@@ -3,6 +3,7 @@
 # TODO begin experimenting with the various conditions, making sure it matches
 #      real life.
 # TODO the paper, the actual modelling.
+# TODO change colors to be consistant; fixed scale
 
 
 import lattice
@@ -50,8 +51,8 @@ class Big:
         self.faucet_y = 2
         self.faucet_width = 1
         self.faucet_length = 1
-        self.faucet_temp = 90
-        self.faucet_node_depth = 10
+        self.faucet_temp = 100
+        self.faucet_node_depth = 0
 
     # Just switches which lattice is being used. Will be called after every
     # time step.
@@ -74,7 +75,7 @@ class Big:
 
     # Swap out how it mixes whenever we want to
     def MixingFrequency(self,t,freq):
-        if (t + 1) % freq == 0:
+        if (t - 1) % freq == 0:
             MixingOne(self.lattices[self.cur_lattice])
 
     # Simulates for t timesteps. It'll draw and save a frame every draw_save
@@ -85,7 +86,7 @@ class Big:
             if t % 10 == 0:
                 print t
             self.step()
-            self.MixingFrequency(t,10)
+            self.MixingFrequency(t, 50)
             self.switch_lattice()
             if t % draw_save == 0:
                 self.draw(int(self.x_size / 2.0))
@@ -130,6 +131,7 @@ class Big:
                       neighbors = self.get_neighbors(node)
                       node.update(neighbors)
                       self.lattices[self.next_lattice()][x][y][z] = node
+                      #set body nodes to initial temp
         # This will pertubate all the temperatures of the nodes selected
         # self.lattices[self.next_lattice()] = person.step(self.lattices[self.next_lattice()])
         self.faucet(self.faucet_x, self.faucet_y,
@@ -188,7 +190,7 @@ class Big:
 
 
 
-def_temp = 40
+def_temp = 50
 
 def volume_tub(x,y,z,volume_node):
     return x * y * z * volume_node
@@ -268,17 +270,17 @@ def MixingTwo(lattice,lens):
                     node.temp = lattice[pos.x][(pos.y + lens) % y_size ][pos.z].temp
 
 
-x = 40
-y = 60
-z = 30
+x = 32 
+y = 48
+z = 25 
 
-body_pos_x = 20
-body_pos_y = 48
-body_pos_z = 20
+body_pos_x = x/2
+body_pos_y = int(y*4./5)
+body_pos_z = int(z*2./3)
 
-body_width = 10   # x
-body_length = 10 # y
-body_height = 5 # z
+body_width = x/4   # x
+body_length = y/6  # y
+body_height = z/6  # z
 
 body = make_body(body_pos_x, body_pos_y, body_pos_z, body_width, body_length, body_height)
 
