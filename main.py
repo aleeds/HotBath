@@ -210,7 +210,7 @@ class Big:
         #slice_temp = [[int(i) for i in row] for row in slice_temp]
 
         #print slice_temp
-        p = plt.imshow(slice_temp,cmap = "gray")
+        p = plt.imshow(slice_temp,cmap = "bwr")
         plt.colorbar()
         fig = plt.gcf()
         plt.clim()
