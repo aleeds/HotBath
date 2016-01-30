@@ -49,10 +49,10 @@ class Big:
         self.lattices[1] = lattice
         self.faucet_x = self.x_size / 2
         self.faucet_y = 2
-        self.faucet_width = 1
-        self.faucet_length = 1
+        self.faucet_width = 2
+        self.faucet_length = 2
         self.faucet_temp = 100
-        self.faucet_node_depth = z_size - 2
+        self.faucet_node_depth = 4 # z_size - 2
 
     # Just switches which lattice is being used. Will be called after every
     # time step.
@@ -86,7 +86,7 @@ class Big:
             if t % 10 == 0:
                 print t
             self.step()
-            self.MixingFrequency(t, 50)
+            self.MixingFrequency(t, 10)
             self.switch_lattice()
             if t % draw_save == 0:
                 self.draw(int(self.x_size / 2.0))
@@ -188,6 +188,7 @@ class Big:
         fig = plt.gcf()
         plt.clim()
         plt.title("Temperature of Bathtub")
+        plt.plot([1,1], [0,self.y_size],'-k')
         plt.show()
 
 
@@ -277,9 +278,9 @@ def MixingTwo(lattice,lens):
                     node.temp = lattice[pos.x][(pos.y + lens) % y_size ][pos.z].temp
 
 
-x = 32
-y = 48
-z = 25
+x = int(32./3)
+y = int(48./3)
+z = int(25./3)
 
 body_pos_x = x/2
 body_pos_y = int(y*4./5)
@@ -294,4 +295,4 @@ body = make_body(body_pos_x, body_pos_y, body_pos_z, body_width, body_length, bo
 
 
 b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body))
-b.Main(1000,10)
+b.Main(1100,100)
