@@ -6,6 +6,8 @@
 # real life.
 # TODO scaly scale
 # TODO the paper, the actual modelling.
+# TODO pass in time step to convection functions
+#TODO second cut doesn't show body (?)
 
 
 import lattice
@@ -84,7 +86,7 @@ class Big:
             self.step()
             if t % draw_save == 0:
                 self.draw(int(self.x_size / 2.0))
-                self.draw(4)
+                #self.draw(4)
                 plt.savefig("first.png")
 
     # This function simply gets the neighbors of the Node node.
@@ -169,7 +171,8 @@ class Big:
         # standard 2d python list of floats or whatever
         slice_temp = self.GetTemps(slice_node)
         #slice_temp = [[int(i) for i in row] for row in slice_temp]
-        print slice_temp
+
+        #print slice_temp
         p = plt.imshow(slice_temp)
         fig = plt.gcf()
         plt.clim()
@@ -188,14 +191,15 @@ def BuildLatticeRectangularTub(x,y,z,volume_node,body):
     wallx = [0, 1, x - 2, x - 1]
     wally = [0, 1, y - 2, y - 1]
     wallz = [z - 2, z - 1]
+
     for i in range(0,x):
         for j in range(0,y):
             for k in range(0,z):
                 if (i,j,k) in body:
-                    lattice[i][j][k] = Node(37,
+                    lattice[i][j][k] = Node(90,
                                             1,i,j,k,
                                             volume_node ** (2./ 3),
-                                            volume_node,4) # this is the size of skin
+                                            volume_node,1) # this is the size of skin, was 4
                 elif i in wallx or j in wally or k in wallz:
                     lattice[i][j][k] = Boundary(i,j,k)
                 elif k in [0,1]:
@@ -215,6 +219,17 @@ def BuildLatticeRectangularTub(x,y,z,volume_node,body):
 x = 20
 y = 30
 z = 10
+body_width = 5 
+body_length = 5
+body_height = 2 
+body_x = 10
+body_y = 20 
+body_z = 5
+
+body = [(i,j,k) for i in range(body_x - body_width, body_x + body_width)
+                for j in range(body_y - body_length, body_y + body_length)
+                for k in range(body_z - body_height, body_z + body_height)]
+
 
 b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body))
 b.Main(1000,100)

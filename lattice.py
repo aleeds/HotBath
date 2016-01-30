@@ -4,3 +4,4 @@ class Lattice:
   y = 0.0 #Float
   z = 0.0 #Float
   isBoundary = False
+  isBody = False

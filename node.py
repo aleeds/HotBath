@@ -66,6 +66,8 @@ class Node(Lattice):
   def __init__(self, t, s, xx, yy, zz, a, w, dd):
     self.temp = t
     self.state = s
+    if(self.state == 1):
+      isBody = True
     self.pos = Vector(xx, yy, zz)
     self.Area = a
     self.Weight = w
@@ -87,7 +89,13 @@ class Node(Lattice):
 
   #Node -> Float
   def body_water(self, n):
-    return water_k[self.temp]/100000.0*self.Area*(self.temp - n.temp)*time_step/(self.d * n.d)
+    time_step = 1
+    if(self.isBody):
+      return water_k[self.temp]/100000.0*self.Area*(self.temp - n.temp)*time_step/(self.d * n.d)
+    else:
+      return water_k[self.temp]/100000.0*self.Area*(self.temp - n.temp)*time_step/(1000.0)
+        
+    #return water_k[self.temp]/100000.0*self.Area*(self.temp - n.temp)*time_step/(self.d * n.d)
 
   #Node -> Float
   def water_water(self, n):
