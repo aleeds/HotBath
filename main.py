@@ -13,6 +13,7 @@ import person
 import itertools
 import matplotlib.pyplot as plt
 import random
+from math import sqrt
 
 class Big:
     """This class will contain everything needed to run the simulation. It'll
@@ -94,6 +95,8 @@ class Big:
                 #self.draw(10)
 
                 plt.savefig("first.png")
+                self.TempStatistics()
+                plt.show()
 
 
     # This function simply gets the neighbors of the Node node.
@@ -167,6 +170,21 @@ class Big:
                     temp_row.append(node.temp)
             temps.append(temp_row)
         return temps
+
+    def TempStatistics(self):
+        temps = []
+        for plane in self.lattices[self.cur_lattice]:
+            for row in plane:
+                for node in row:
+                    if not node.isBoundary and node.state == 2:
+                        temps.append(node.temp)
+        mean = sum(temps)/len(temps)
+        temps_minus_mean_squared = [(temp - mean) ** 2 for temp in temps]
+        std_dev = sqrt(sum(temps_minus_mean_squared)/len(temps_minus_mean_squared))
+        plt.hist(temps)
+        plt.xlabel("Temp")
+        plt.ylabel("Counts")
+        plt.title("Mean: " + str(mean) + " std_dev: " + str(std_dev))
     # This function will draw the data using matplotlib, plt.imshow() as used
     # the webpage
     # http://matplotlib.org/examples/pylab_examples/animation_demo.html
@@ -183,7 +201,7 @@ class Big:
         #slice_temp = [[int(i) for i in row] for row in slice_temp]
 
         #print slice_temp
-        p = plt.imshow(slice_temp,cmap = "gray")
+        p = plt.imshow(slice_temp,cmap = "bwr")
         plt.colorbar()
         fig = plt.gcf()
         plt.clim()
@@ -240,10 +258,8 @@ def make_body(body_x, body_y, body_z, x_width, y_length, z_height):
   temp = [(i,j,k) for i in range(body_x, body_x + x_width)
                   for j in range(body_y, body_y + y_length)
                   for k in range(0, body_z)]
-  
+
   body += temp
-  body = list(set(body)) 
-  
   return body
 
 def GetRandomWater(lattice):
@@ -295,4 +311,4 @@ body = make_body(body_pos_x, body_pos_y, body_pos_z, body_width, body_length, bo
 
 
 b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body))
-b.Main(1100,100)
+b.Main(1000,100)
