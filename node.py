@@ -95,12 +95,13 @@ class Node(Lattice):
   # this function is confusing. Maybe need to review later
   def body_water(self, n):
     time_step = 1
-    if(self.isBody):
+    """if(self.isBody):
       return water_k[self.temp]/100000.0*self.Area*(self.temp - n.temp)*time_step/(self.d * n.d)
     else:
-      return water_k[self.temp]/100000.0*self.Area*(self.temp - n.temp)*time_step/(1000.0)
+      return water_k[self.temp]/100000.0*self.Area*(self.temp - n.temp)*time_step/(1000.0)"""
 
-    #return water_k[self.temp]/100000.0*self.Area*(self.temp - n.temp)*time_step/(self.d * n.d)
+    return water_k[self.temp]/100000.0*self.Area*(self.temp - n.temp)*time_step/(self.d * n.d)
+    #changed so body molecules are 
 
   #Node -> Float
   def water_water(self, n):
@@ -161,5 +162,3 @@ class Boundary(Lattice):
         self.y = y
         self.z = z
 
-# n = Node(88.88888, 2, 1,2,3, 100,10)
-# print str(water_k[n.temp])
