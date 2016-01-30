@@ -87,7 +87,7 @@ class Node(Lattice):
 
   #Node -> Float
   def air_water(self, n):
-    q = (Hc_water_air * self.Area * (self.temp - n.temp))/1000.0
+    q = (Hc_water_air * self.Area * (self.temp - n.temp))/100.0
     return q
     #might need standard conduction
 
@@ -131,7 +131,7 @@ class Node(Lattice):
 
     self.temp -= deltaQ/self.Weight
     if self.isBody:
-        self.temp = 100
+        self.temp = 37
 
 
 
