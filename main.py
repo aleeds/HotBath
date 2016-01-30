@@ -82,6 +82,8 @@ class Big:
     # Int -> Int -> Void
     def Main(self, max_time_step, draw_save = 10000):
         for t in range(0,max_time_step):
+            if t % 10 == 0:
+                print t
             self.step()
             self.MixingFrequency(t,10)
             self.switch_lattice()
