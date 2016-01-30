@@ -4,6 +4,7 @@ from node import Boundary
 import person
 import itertools
 import matplotlib.pyplot as plt
+import random
 
 class Big:
     """This class will contain everything needed to run the simulation. It'll
@@ -52,10 +53,11 @@ class Big:
     # timesteps.
     # Int -> Int -> Void
     def Main(self,max_time_step,draw_save = 10000):
-        for t in (0,max_time_step):
+        for t in range(0,max_time_step):
             self.step()
             if t % draw_save == 0:
-                self.draw(int(self.y_size))
+                self.draw(int(self.x_size / 2.0))
+
                 plt.savefig("first.png")
 
     # This function simply gets the neighbors of the Node node.
@@ -63,7 +65,7 @@ class Big:
     def get_neighbors(self,node):
         nodes = []
         for (a,b,c) in node.neighbor_indices:
-            nodes += self.lattices[self.cur_lattice][a][b][c]
+            nodes.append(self.lattices[self.cur_lattice][a][b][c])
         return nodes
 
     # [Nodes] -> [Nodes]
@@ -82,9 +84,10 @@ class Big:
                 for z in range(0,self.z_size):
                     # may need to make copy function
                     node = self.lattices[self.cur_lattice][x][y][z]
-                    if not node.isBoundary and node.state == 2:
+                    if not node.isBoundary and node.state in [1,2]:
+
                       neighbors = self.get_neighbors(node)
-                      node.Update(neighbors)
+                      node.update(neighbors)
                       self.lattices[self.next_lattice()][x][y][z] = node
         # This will pertubate all the temperatures of the nodes selected
         # self.lattices[self.next_lattice()] = person.step(self.lattices[self.next_lattice()])
@@ -92,10 +95,19 @@ class Big:
 
 
     def GetSlice(self,index):
-        return [[0,0],[0,0]]
+        return self.lattices[self.cur_lattice][index]
 
     def GetTemps(self,nodes):
-        return [[0,0],[0,0]]
+        temps = []
+        for row in nodes:
+            temp_row = []
+            for node in row:
+                if node.isBoundary:
+                    temp_row.append(0)
+                else:
+                    temp_row.append(node.temp)
+            temps.append(temp_row)
+        return temps
     # This function will draw the data using matplotlib, plt.imshow() as used
     # the webpage
     # http://matplotlib.org/examples/pylab_examples/animation_demo.html
@@ -106,12 +118,15 @@ class Big:
     # leaning against the far side of the tub.
     def draw(self, slice_ind):
         slice_node = self.GetSlice(slice_ind)
+        # print slice_node
         # standard 2d python list of floats or whatever
         slice_temp = self.GetTemps(slice_node)
+        print slice_temp
         p = plt.imshow(slice_temp)
         fig = plt.gcf()
         plt.clim()
         plt.title("Temperature of Bathtub")
+        plt.show()
 
 
 
@@ -121,29 +136,34 @@ def volume_tub(x,y,z,volume_node):
     return x * y * z * volume_node
 
 def BuildLatticeRectangularTub(x,y,z,volume_node):
-    lattice = [[[0]*x]*y]*z
+    lattice = [[[0 for i in range(x)] for j in range(y)] for k in range(z)]
+    wallx = [0,1,x - 2, x - 1]
+    wally = [0,1,y - 2, y - 1]
+    wallz = [z - 2, z - 1]
     for i in range(0,x):
         for j in range(0,y):
             for k in range(0,z):
-                wallx = [0,1,x - 2, x - 1]
-                wally = [0,1,y - 2, y - 1]
-                wallz = [z - 2, z - 1]
+
                 if i in wallx or j in wally or k in wallz:
+
                     lattice[i][j][k] = Boundary(i,j,k)
                 elif k in [0,1]:
-                    lattice[i][j][k] = Node(def_temp,0,i,j,k,
+                    lattice[i][j][k] = Node(def_temp / 10,0,i,j,k,
                                             volume_node ** (2./ 3),
                                             volume_node,1)
                 else:
-                    lattice[i][j][k] = Node(def_temp,2,i,j,k,
+                    lattice[i][j][k] = Node(def_temp + random.randrange(-20,20),
+                                            2,i,j,k,
                                             volume_node ** (2./ 3),
                                             volume_node,1)
+
+
     return lattice
 
 
-x = 30
-y = 30
-z = 30
+x = 10
+y = 10
+z = 10
 
 b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1))
-b.Main(10)
+b.Main(100)

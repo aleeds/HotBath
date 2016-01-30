@@ -73,6 +73,7 @@ class Node(Lattice):
     ps = [[1,-1,0],[1,-1,0],[1,-1,0]]
     self.neighbor_indices = list(itertools.product(*ps))
     self.neighbor_indices.remove((0,0,0))
+
     tmp = [(xx + a,yy + b,zz + c) for (a,b,c) in self.neighbor_indices]
     self.neighbor_indices = tmp
 
@@ -92,7 +93,7 @@ class Node(Lattice):
   #Node -> Float
   def water_water(self, n):
     time_step = 1
-    return water_k[self.temp]*self.A*(self.temp - n.temp)*time_step/self.d
+    return water_k[self.temp]*self.Area*(self.temp - n.temp)*time_step/self.d
 
   #This will update the temperature of the node based on the time step and neighboring nodes
   #[Node] -> Unit
@@ -102,19 +103,20 @@ class Node(Lattice):
     #water <--> water
     deltaQ = 0.0
     for n in neighbors:
-      if(self.state == 0): #air
-        if(n.state == 2):  #air -> water
-          deltaQ += air_water(n)
-      elif(self.state == 1): #body
-        if(n.state == 2):         #body -> water
-          deltaQ += body_water(n)
-      else:                 #water
-        if(n.state == 0):   #water -> air
-          deltaQ += air_water(n)
-        elif(n.state == 1): #water -> body
-          deltaQ += body_water(n)
-        else:               #water -> water
-          deltaQ += water_water(n)
+      if not n.isBoundary:
+        if(self.state == 0): #air
+          if(n.state == 2):  #air -> water
+            deltaQ += self.air_water(n)
+        elif(self.state == 1): #body
+          if(n.state == 2):         #body -> water
+            deltaQ += self.body_water(n)
+        else:                 #water
+          if(n.state == 0):   #water -> air
+            deltaQ += self.air_water(n)
+          elif(n.state == 1): #water -> body
+            deltaQ += self.body_water(n)
+          else:               #water -> water
+            deltaQ += self.water_water(n)
 
     self.temp -= deltaQ/self.Weight
 
