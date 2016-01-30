@@ -7,7 +7,7 @@
 import lattice
 from node import Node
 from node import Boundary
-import person
+
 import itertools
 import matplotlib.pyplot as plt
 import random
@@ -77,6 +77,10 @@ class Big:
         if (t - 1) % freq == 0:
             MixingOne(self.lattices[self.cur_lattice])
 
+    def MixingOnCondition(self,starting_temp,starting_delta):
+        (mean,temps,std_dev) = self.TempData()
+        if abs(mean - starting_temp) > starting_delta or std_dev > starting_delta:
+            MixingOne(self.lattices[self.cur_lattice])
     # Simulates for t timesteps. It'll draw and save a frame every draw_save
     # timesteps.
     # Int -> Int -> Void
@@ -85,7 +89,8 @@ class Big:
             if t % 10 == 0:
                 print t
             self.step()
-            self.MixingFrequency(t, 2000)
+            #self.MixingFrequency(t, 2000)
+            self.MixingOnCondition(50,5)
             self.switch_lattice()
             if t % draw_save == 0:
                 self.draw(int(self.x_size / 2.0),t)
@@ -170,7 +175,7 @@ class Big:
         temps = zip(*temps[::-1])
         return temps
 
-    def TempStatistics(self):
+    def TempData(self):
         temps = []
         for plane in self.lattices[self.cur_lattice]:
             for row in plane:
@@ -180,6 +185,10 @@ class Big:
         mean = sum(temps)/len(temps)
         temps_minus_mean_squared = [(temp - mean) ** 2 for temp in temps]
         std_dev = sqrt(sum(temps_minus_mean_squared)/len(temps_minus_mean_squared))
+        return (mean,temps,std_dev)
+
+    def TempStatistics(self):
+        (mean,temps,std_dev) = self.TempData()
         plt.hist(temps)
         plt.xlabel("Temp")
         plt.ylabel("Counts")
@@ -205,7 +214,7 @@ class Big:
         plt.colorbar()
         fig = plt.gcf()
         plt.clim()
-        plt.title("Temperature of Bathtub (time_step:" + str(t) + ")\n") 
+        plt.title("Temperature of Bathtub (time_step:" + str(t) + ")\n")
         plt.plot([-2,self.y_size], [1,1], '-k')
         plt.show()
 
@@ -312,4 +321,4 @@ body = make_body(body_pos_x, body_pos_y, body_pos_z, body_width, body_length, bo
 
 
 b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body))
-b.Main(1100,100)
+b.Main(3000,300)
