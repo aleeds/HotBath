@@ -52,7 +52,7 @@ class Big:
         self.faucet_width = 1
         self.faucet_length = 1
         self.faucet_temp = 100
-        self.faucet_node_depth = 0
+        self.faucet_node_depth = z_size - 2
 
     # Just switches which lattice is being used. Will be called after every
     # time step.
@@ -161,8 +161,8 @@ class Big:
         for row in nodes:
             temp_row = []
             for node in row:
-                if node.isBoundary:
-                    temp_row.append(0)
+                if node.isIndicator:
+                    temp_row.append(100)
                 else:
                     temp_row.append(node.temp)
             temps.append(temp_row)
@@ -183,7 +183,7 @@ class Big:
         #slice_temp = [[int(i) for i in row] for row in slice_temp]
 
         #print slice_temp
-        p = plt.imshow(slice_temp,cmap = "hot")
+        p = plt.imshow(slice_temp,cmap = "gray")
         plt.colorbar()
         fig = plt.gcf()
         plt.clim()
@@ -213,8 +213,11 @@ def BuildLatticeRectangularTub(x,y,z,volume_node,body):
                                             volume_node,1) # this is the size of skin, was 4
                 elif i in wallx or j in wally or k in wallz:
                     lattice[i][j][k] = Boundary(i,j,k)
+                    if j == 0:
+                        lattice[i][j][k].isIndicator = True
+
                 elif k in [0,1]:
-                    lattice[i][j][k] = Node(def_temp - 30,0,i,j,k,
+                    lattice[i][j][k] = Node(def_temp / 4,0,i,j,k,
                                             volume_node ** (2./ 3),
                                             volume_node,1)
                 else:
@@ -274,9 +277,9 @@ def MixingTwo(lattice,lens):
                     node.temp = lattice[pos.x][(pos.y + lens) % y_size ][pos.z].temp
 
 
-x = 32 
+x = 32
 y = 48
-z = 25 
+z = 25
 
 body_pos_x = x/2
 body_pos_y = int(y*4./5)
