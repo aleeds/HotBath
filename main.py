@@ -211,20 +211,39 @@ def BuildLatticeRectangularTub(x,y,z,volume_node,body):
 
     return lattice
 
+# (Int, Int, Int, Int, Int, Int) -> [(Int,Int,Int)]
+def make_body(body_x, body_y, body_z, x_width, y_length, z_height, x, y, z):
+  #body = [(i,j,k) for i in range(body_x - x_width, body_x + x_width)
+                  #for j in range(body_y - y_length, body_y + y_length)
+                  #for k in range(body_z - z_height, body_z + z_height)]
+
+  body = [(i,j,k) for i in range(x-x_width, x-2)
+                  for j in range(y-y_length, y-2)
+                  for k in range(z-z_height, z-2)]
+  print str(len(body))
+                  
+  temp = [(i,j,k) for i in range(body_x - x_width, body_x)
+                  for j in range(body_y - y_length, body_y)
+                  for k in range(0,z-2)]
+  print temp
+  body.append(temp)
+  print str(len(body))
+  return body
+
 
 x = 20
 y = 30
-z = 10
-body_width = 7  # x
-body_length = 5 # y
-body_height = 2 # z
-body_x = 10
-body_y = 20
-body_z = 5
+z = 15
 
-body = [(i,j,k) for i in range(body_x - body_width, body_x + body_width)
-                for j in range(body_y - body_length, body_y + body_length)
-                for k in range(body_z - body_height, body_z + body_height)]
+body_pos_x = 10
+body_pos_y = 20
+body_pos_z = 5
+body_width = 10  # x
+body_length = 10 # y
+body_height = 7 # z
+
+body = make_body(body_pos_x, body_pos_y, body_pos_z, body_width, body_length, body_height, x, y, z)
+
 
 
 b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body))
