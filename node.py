@@ -131,7 +131,7 @@ class Node(Lattice):
 
     self.temp -= deltaQ/self.Weight
     if self.isBody:
-        self.temp = 100 #37
+        self.temp = 37
 
 
 

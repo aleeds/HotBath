@@ -88,7 +88,7 @@ class Big:
             if t % draw_save == 0:
                 self.draw(int(self.x_size / 2.0))
                 self.draw(4)
-                self.draw(10)
+                #self.draw(10)
 
                 plt.savefig("first.png")
 
@@ -201,7 +201,7 @@ def BuildLatticeRectangularTub(x,y,z,volume_node,body):
         for j in range(0,y):
             for k in range(0,z):
                 if (i,j,k) in body:
-                    lattice[i][j][k] = Node(100,  #37
+                    lattice[i][j][k] = Node(37,
                                             1,i,j,k,
                                             volume_node ** (2./ 3),
                                             volume_node,1) # this is the size of skin, was 4
@@ -231,10 +231,7 @@ def make_body(body_x, body_y, body_z, x_width, y_length, z_height):
                   for j in range(body_y, body_y + y_length)
                   for k in range(0, body_z)]
 
-  print(str(len(temp)))
-  print(str(len(body)))
   body += temp
-  print(str(len(body)))
   return body
 
 def GetRandomWater(lattice):
