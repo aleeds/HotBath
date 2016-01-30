@@ -1,13 +1,8 @@
 # TODO Mixing by the person, by time/bath condition/etc
-# TODO Adding the person
 # TODO draw the line for da waater
-# TODO better drawing of da water
 # TODO begin experimenting with the various conditions, making sure it matches
-# real life.
-# TODO scaly scale
+#      real life.
 # TODO the paper, the actual modelling.
-# TODO pass in time step to convection functions
-#TODO second cut doesn't show body (?)
 
 
 import lattice
@@ -86,7 +81,7 @@ class Big:
             self.step()
             if t % draw_save == 0:
                 self.draw(int(self.x_size / 2.0))
-                #self.draw(4)
+                self.draw(4)
                 plt.savefig("first.png")
 
     # This function simply gets the neighbors of the Node node.
@@ -173,7 +168,8 @@ class Big:
         #slice_temp = [[int(i) for i in row] for row in slice_temp]
 
         #print slice_temp
-        p = plt.imshow(slice_temp)
+        p = plt.imshow(slice_temp,cmap = "hot")
+        plt.colorbar()
         fig = plt.gcf()
         plt.clim()
         plt.title("Temperature of Bathtub")
@@ -196,7 +192,7 @@ def BuildLatticeRectangularTub(x,y,z,volume_node,body):
         for j in range(0,y):
             for k in range(0,z):
                 if (i,j,k) in body:
-                    lattice[i][j][k] = Node(90,
+                    lattice[i][j][k] = Node(100,
                                             1,i,j,k,
                                             volume_node ** (2./ 3),
                                             volume_node,1) # this is the size of skin, was 4
@@ -219,11 +215,11 @@ def BuildLatticeRectangularTub(x,y,z,volume_node,body):
 x = 20
 y = 30
 z = 10
-body_width = 5 
-body_length = 5
-body_height = 2 
+body_width = 7  # x
+body_length = 5 # y
+body_height = 2 # z
 body_x = 10
-body_y = 20 
+body_y = 20
 body_z = 5
 
 body = [(i,j,k) for i in range(body_x - body_width, body_x + body_width)

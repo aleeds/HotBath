@@ -37,7 +37,10 @@ class InterpolationArray:
 
 #Global constants
 water_k = InterpolationArray()
-Hc = 1.0             #Heat transfer constant air->water
+# Source for Hc:
+# http://www.engineersedge.com/heat_transfer/convective_heat_transfer_coefficients__13378.htm
+Hc_water_air = 3.0             # Heat transfer constant air->water,
+Hc_water_water = 1200
 
 
 #air_temp = 76.0         #in main
@@ -68,6 +71,7 @@ class Node(Lattice):
     self.state = s
     if(self.state == 1):
       isBody = True
+
     self.pos = Vector(xx, yy, zz)
     self.Area = a
     self.Weight = w
@@ -83,24 +87,27 @@ class Node(Lattice):
 
   #Node -> Float
   def air_water(self, n):
-    q = (Hc * self.Area * (self.temp - n.temp))/1000.0
+    q = (Hc_water_air * self.Area * (self.temp - n.temp))/1000.0
     return q
     #might need standard conduction
 
   #Node -> Float
+  # this function is confusing. Maybe need to review later
   def body_water(self, n):
     time_step = 1
     if(self.isBody):
       return water_k[self.temp]/100000.0*self.Area*(self.temp - n.temp)*time_step/(self.d * n.d)
     else:
       return water_k[self.temp]/100000.0*self.Area*(self.temp - n.temp)*time_step/(1000.0)
-        
+
     #return water_k[self.temp]/100000.0*self.Area*(self.temp - n.temp)*time_step/(self.d * n.d)
 
   #Node -> Float
   def water_water(self, n):
     time_step = 1
-    return water_k[self.temp]/100000.0*self.Area*(self.temp - n.temp)*time_step/self.d
+    q_conduction = water_k[self.temp]/100000.0*self.Area*(self.temp - n.temp)*time_step/self.d
+    q_convection = Hc_water_water * (self.temp - n.temp) * self.Area / 100000
+    return q_convection + q_conduction
 
   #This will update the temperature of the node based on the time step and neighboring nodes
   #[Node] -> Unit
@@ -123,6 +130,9 @@ class Node(Lattice):
             deltaQ += self.water_water(n)
 
     self.temp -= deltaQ/self.Weight
+    if self.isBody:
+        self.temp = 100
+
 
 
   #Returns the state mapped to the appropiate string based on earlier documentation
