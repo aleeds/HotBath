@@ -52,8 +52,8 @@ class Big:
         self.faucet_y = 2
         self.faucet_width = 2
         self.faucet_length = 2
-        self.faucet_temp = 100
-        self.faucet_node_depth = 4 # z_size - 2
+        self.faucet_temp = 60
+        self.faucet_node_depth = 0 #z_size - 3
 
     # Just switches which lattice is being used. Will be called after every
     # time step.
@@ -87,7 +87,7 @@ class Big:
             if t % 10 == 0:
                 print t
             self.step()
-            self.MixingFrequency(t, 10)
+            self.MixingFrequency(t, 20)
             self.switch_lattice()
             if t % draw_save == 0:
                 self.draw(int(self.x_size / 2.0))
@@ -212,6 +212,7 @@ class Big:
 
 
 def_temp = 50
+room_temp = 21
 
 def volume_tub(x,y,z,volume_node):
     return x * y * z * volume_node
@@ -236,7 +237,7 @@ def BuildLatticeRectangularTub(x,y,z,volume_node,body):
                         lattice[i][j][k].isIndicator = True
 
                 elif k in [0,1]:
-                    lattice[i][j][k] = Node(def_temp / 4,0,i,j,k,
+                    lattice[i][j][k] = Node(room_temp,0,i,j,k,
                                             volume_node ** (2./ 3),
                                             volume_node,1)
                 else:
