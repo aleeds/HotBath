@@ -88,6 +88,7 @@ class Big:
             if t % draw_save == 0:
                 self.draw(int(self.x_size / 2.0))
                 self.draw(4)
+                self.draw(10)
 
                 plt.savefig("first.png")
 
@@ -200,7 +201,7 @@ def BuildLatticeRectangularTub(x,y,z,volume_node,body):
         for j in range(0,y):
             for k in range(0,z):
                 if (i,j,k) in body:
-                    lattice[i][j][k] = Node(37,
+                    lattice[i][j][k] = Node(100,  #37
                                             1,i,j,k,
                                             volume_node ** (2./ 3),
                                             volume_node,1) # this is the size of skin, was 4
@@ -220,22 +221,20 @@ def BuildLatticeRectangularTub(x,y,z,volume_node,body):
     return lattice
 
 # (Int, Int, Int, Int, Int, Int) -> [(Int,Int,Int)]
-def make_body(body_x, body_y, body_z, x_width, y_length, z_height, x, y, z):
-  #body = [(i,j,k) for i in range(body_x - x_width, body_x + x_width)
-                  #for j in range(body_y - y_length, body_y + y_length)
-                  #for k in range(body_z - z_height, body_z + z_height)]
+def make_body(body_x, body_y, body_z, x_width, y_length, z_height):
+  body = [(i,j,k) for i in range(body_x - x_width, body_x + x_width)
+                  for j in range(body_y - y_length, body_y + y_length)
+                  for k in range(body_z - z_height, body_z + z_height)]
 
-  body = [(i,j,k) for i in range(x-x_width, x-2)
-                  for j in range(y-y_length, y-2)
-                  for k in range(z-z_height, z-2)]
-  print str(len(body))
 
-  temp = [(i,j,k) for i in range(body_x - x_width, body_x)
-                  for j in range(body_y - y_length, body_y)
-                  for k in range(0,z-2)]
-  print temp
-  body.append(temp)
-  print str(len(body))
+  temp = [(i,j,k) for i in range(body_x, body_x + x_width)
+                  for j in range(body_y, body_y + y_length)
+                  for k in range(0, body_z)]
+
+  print(str(len(temp)))
+  print(str(len(body)))
+  body += temp
+  print(str(len(body)))
   return body
 
 def GetRandomWater(lattice):
@@ -270,18 +269,19 @@ def MixingTwo(lattice,lens):
                     node.temp = lattice[pos.x][(pos.y + lens) % y_size ][pos.z].temp
 
 
-x = 20
-y = 30
-z = 15
+x = 40
+y = 60
+z = 30
 
-body_pos_x = 10
-body_pos_y = 20
-body_pos_z = 5
-body_width = 10  # x
+body_pos_x = 20
+body_pos_y = 48
+body_pos_z = 20
+
+body_width = 10   # x
 body_length = 10 # y
-body_height = 7 # z
+body_height = 5 # z
 
-body = make_body(body_pos_x, body_pos_y, body_pos_z, body_width, body_length, body_height, x, y, z)
+body = make_body(body_pos_x, body_pos_y, body_pos_z, body_width, body_length, body_height)
 
 
 
