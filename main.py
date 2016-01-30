@@ -100,8 +100,9 @@ class Big:
     # Node -> [Node]
     def get_neighbors(self,node):
         nodes = []
-        for (a,b,c) in node.neighbor_indices:
-            nodes.append(self.lattices[self.cur_lattice][a][b][c])
+        if(not node.isBody):
+            for (a,b,c) in node.neighbor_indices:
+                nodes.append(self.lattices[self.cur_lattice][a][b][c])
         return nodes
 
     # [Nodes] -> [Nodes]
@@ -132,6 +133,7 @@ class Big:
                       node.update(neighbors)
                       self.lattices[self.next_lattice()][x][y][z] = node
                       #set body nodes to initial temp
+
         # This will pertubate all the temperatures of the nodes selected
         # self.lattices[self.next_lattice()] = person.step(self.lattices[self.next_lattice()])
         self.faucet(self.faucet_x, self.faucet_y,
