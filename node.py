@@ -81,7 +81,7 @@ class Node(Lattice):
 
   #Node -> Float
   def air_water(self, n):
-    q = Hc * self.Area * (self.temp - n.temp)
+    q = (Hc * self.Area * (self.temp - n.temp))/100.0
     return q
     #might need standard conduction
 
@@ -93,14 +93,11 @@ class Node(Lattice):
   #Node -> Float
   def water_water(self, n):
     time_step = 1
-    return water_k[self.temp]*self.Area*(self.temp - n.temp)*time_step/self.d
+    return water_k[self.temp]/100000.0*self.Area*(self.temp - n.temp)*time_step/self.d
 
   #This will update the temperature of the node based on the time step and neighboring nodes
   #[Node] -> Unit
   def update(self, neighbors):
-    #body <--> water
-    #air <--> water
-    #water <--> water
     deltaQ = 0.0
     for n in neighbors:
       if not n.isBoundary:

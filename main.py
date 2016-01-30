@@ -52,12 +52,11 @@ class Big:
     # Simulates for t timesteps. It'll draw and save a frame every draw_save
     # timesteps.
     # Int -> Int -> Void
-    def Main(self,max_time_step,draw_save = 10000):
+    def Main(self, max_time_step, draw_save = 10000):
         for t in range(0,max_time_step):
             self.step()
             if t % draw_save == 0:
                 self.draw(int(self.x_size / 2.0))
-
                 plt.savefig("first.png")
 
     # This function simply gets the neighbors of the Node node.
@@ -143,9 +142,7 @@ def BuildLatticeRectangularTub(x,y,z,volume_node):
     for i in range(0,x):
         for j in range(0,y):
             for k in range(0,z):
-
                 if i in wallx or j in wally or k in wallz:
-
                     lattice[i][j][k] = Boundary(i,j,k)
                 elif k in [0,1]:
                     lattice[i][j][k] = Node(def_temp / 10,0,i,j,k,
@@ -166,4 +163,4 @@ y = 10
 z = 10
 
 b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1))
-b.Main(100)
+b.Main(1000,100)
