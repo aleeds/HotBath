@@ -73,16 +73,24 @@ class Big:
 
 
 
+    def MixingFrequency(self,t,freq):
+        if (t + 1) % freq == 0:
+            MixingOne(self.lattices[self.cur_lattice])
+
     # Simulates for t timesteps. It'll draw and save a frame every draw_save
     # timesteps.
     # Int -> Int -> Void
     def Main(self, max_time_step, draw_save = 10000):
         for t in range(0,max_time_step):
             self.step()
+            self.MixingFrequency(t,10)
+            self.switch_lattice()
             if t % draw_save == 0:
                 self.draw(int(self.x_size / 2.0))
                 self.draw(4)
+
                 plt.savefig("first.png")
+
 
     # This function simply gets the neighbors of the Node node.
     # Node -> [Node]
@@ -126,7 +134,7 @@ class Big:
                     self.faucet_width,
                     self.faucet_node_depth,
                     self.faucet_temp)
-        self.switch_lattice()
+
 
 
     def GetSlice(self,index):
@@ -192,14 +200,14 @@ def BuildLatticeRectangularTub(x,y,z,volume_node,body):
         for j in range(0,y):
             for k in range(0,z):
                 if (i,j,k) in body:
-                    lattice[i][j][k] = Node(100,
+                    lattice[i][j][k] = Node(37,
                                             1,i,j,k,
                                             volume_node ** (2./ 3),
                                             volume_node,1) # this is the size of skin, was 4
                 elif i in wallx or j in wally or k in wallz:
                     lattice[i][j][k] = Boundary(i,j,k)
                 elif k in [0,1]:
-                    lattice[i][j][k] = Node(def_temp - 20,0,i,j,k,
+                    lattice[i][j][k] = Node(def_temp - 30,0,i,j,k,
                                             volume_node ** (2./ 3),
                                             volume_node,1)
                 else:
@@ -229,6 +237,31 @@ def make_body(body_x, body_y, body_z, x_width, y_length, z_height, x, y, z):
   body.append(temp)
   print str(len(body))
   return body
+  
+def GetRandomWater(lattice):
+    node = lattice[0][0][0]
+    while node.isBoundary or node.state != 2:
+        i = random.randrange(0,len(lattice))
+        j = random.randrange(0,len(lattice[0]))
+        k = random.randrange(0,len(lattice[0][0]))
+        node = lattice[i][j][k]
+    return node
+
+# This mixing function will take in the current lattice, and swap all the
+# temperatures of all the water in the tub randomly. This will simulate the
+# person thrashing in the tub
+def MixingOne(lattice):
+    for plane in lattice:
+        for line in plane:
+            for node in line:
+                if not node.isBoundary and node.state == 2:
+                    node.temp = GetRandomWater(lattice).temp
+
+# This mixing function will move the temperatures of water close to the faucet
+# to temperatures close to the body, and vice versa. This will simulate a
+# lateral movement from the front to the back
+def MixingTwo(lattice):
+    print "Write this"
 
 
 x = 20
