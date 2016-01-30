@@ -1,9 +1,7 @@
 # TODO Mixing by the person, by time/bath condition/etc
-# TODO draw the line for da waater
 # TODO begin experimenting with the various conditions, making sure it matches
 #      real life.
 # TODO the paper, the actual modelling.
-# TODO change colors to be consistant; fixed scale
 
 
 import lattice
@@ -50,10 +48,10 @@ class Big:
         self.lattices[1] = lattice
         self.faucet_x = self.x_size / 2
         self.faucet_y = 2
-        self.faucet_width = 2
-        self.faucet_length = 2
-        self.faucet_temp = 60
-        self.faucet_node_depth = 0 #z_size - 3
+        self.faucet_width = 1
+        self.faucet_length = 1
+        self.faucet_temp = 74
+        self.faucet_node_depth = 4 #z_size - 3
 
     # Just switches which lattice is being used. Will be called after every
     # time step.
@@ -87,14 +85,14 @@ class Big:
             if t % 10 == 0:
                 print t
             self.step()
-            self.MixingFrequency(t, 20)
+            self.MixingFrequency(t, 2000)
             self.switch_lattice()
             if t % draw_save == 0:
-                self.draw(int(self.x_size / 2.0))
-                self.draw(4)
+                self.draw(int(self.x_size / 2.0),t)
+                self.draw(4,t)
                 #self.draw(10)
 
-                plt.savefig("first.png")
+                ##plt.savefig("first.png")
                 self.TempStatistics()
                 plt.show()
 
@@ -169,6 +167,7 @@ class Big:
                 else:
                     temp_row.append(node.temp)
             temps.append(temp_row)
+        temps = zip(*temps[::-1])
         return temps
 
     def TempStatistics(self):
@@ -176,7 +175,7 @@ class Big:
         for plane in self.lattices[self.cur_lattice]:
             for row in plane:
                 for node in row:
-                    if not node.isBoundary and node.state == 2:
+                    if not node.isBoundary and node.state == 2 and node.temp != self.faucet_temp:
                         temps.append(node.temp)
         mean = sum(temps)/len(temps)
         temps_minus_mean_squared = [(temp - mean) ** 2 for temp in temps]
@@ -193,7 +192,8 @@ class Big:
     # Int -> Void
     # This slice will the slice from faucet side to the back of the individual
     # leaning against the far side of the tub.
-    def draw(self, slice_ind):
+    def draw(self, slice_ind, t):
+        plt.clf()
         slice_node = self.GetSlice(slice_ind)
         # print slice_node
         # standard 2d python list of floats or whatever
@@ -205,8 +205,8 @@ class Big:
         plt.colorbar()
         fig = plt.gcf()
         plt.clim()
-        plt.title("Temperature of Bathtub")
-        plt.plot([1,1], [0,self.y_size],'-k')
+        plt.title("Temperature of Bathtub (time_step:" + str(t) + ")\n") 
+        plt.plot([-2,self.y_size], [1,1], '-k')
         plt.show()
 
 
@@ -312,4 +312,4 @@ body = make_body(body_pos_x, body_pos_y, body_pos_z, body_width, body_length, bo
 
 
 b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body))
-b.Main(1000,100)
+b.Main(1100,100)
