@@ -39,6 +39,12 @@ class Big:
         self.z_size = z_size
         self.lattices[0] = lattice
         self.lattices[1] = lattice
+        self.faucet_x = 3
+        self.faucet_y = 4
+        self.faucet_width = 1
+        self.faucet_length = 1
+        self.faucet_temp = 90
+        self.faucet_node_depth = 10
 
     # Just switches which lattice is being used. Will be called after every
     # time step.
@@ -49,6 +55,17 @@ class Big:
     def next_lattice(self):
         return (self.cur_lattice + 1) % 2
 
+
+    def faucet(self, x, y, length, width, node_depth, temp):
+      for d in range(0, node_depth):
+        for xx in range(max(width-x, 0), width+x):  #might be negative
+          for yy in range(max(y-width, 0), y+width):  #might be negative
+            self.lattices[self.cur_lattice][xx][yy][d].temp = temp 
+
+            
+          
+        
+
     # Simulates for t timesteps. It'll draw and save a frame every draw_save
     # timesteps.
     # Int -> Int -> Void
@@ -57,6 +74,7 @@ class Big:
             self.step()
             if t % draw_save == 0:
                 self.draw(int(self.x_size / 2.0))
+                self.draw(4)
                 plt.savefig("first.png")
 
     # This function simply gets the neighbors of the Node node.
@@ -78,6 +96,12 @@ class Big:
     # me more room per line. This just runs throu
 
     def step(self):
+        self.faucet(self.faucet_x, self.faucet_y,
+                    self.faucet_length,
+                    self.faucet_width,
+                    self.faucet_node_depth,
+                    self.faucet_temp)
+
         for x in range(0,self.x_size):
             for y in range(0,self.y_size):
                 for z in range(0,self.z_size):
@@ -90,6 +114,11 @@ class Big:
                       self.lattices[self.next_lattice()][x][y][z] = node
         # This will pertubate all the temperatures of the nodes selected
         # self.lattices[self.next_lattice()] = person.step(self.lattices[self.next_lattice()])
+        self.faucet(self.faucet_x, self.faucet_y,
+                    self.faucet_length,
+                    self.faucet_width,
+                    self.faucet_node_depth,
+                    self.faucet_temp)
         self.switch_lattice()
 
 
@@ -120,6 +149,7 @@ class Big:
         # print slice_node
         # standard 2d python list of floats or whatever
         slice_temp = self.GetTemps(slice_node)
+        #slice_temp = [[int(i) for i in row] for row in slice_temp]
         print slice_temp
         p = plt.imshow(slice_temp)
         fig = plt.gcf()
@@ -135,9 +165,9 @@ def volume_tub(x,y,z,volume_node):
     return x * y * z * volume_node
 
 def BuildLatticeRectangularTub(x,y,z,volume_node):
-    lattice = [[[0 for i in range(x)] for j in range(y)] for k in range(z)]
-    wallx = [0,1,x - 2, x - 1]
-    wally = [0,1,y - 2, y - 1]
+    lattice = [[[0 for i in range(z)] for j in range(y)] for k in range(x)]
+    wallx = [0, 1, x - 2, x - 1]
+    wally = [0, 1, y - 2, y - 1]
     wallz = [z - 2, z - 1]
     for i in range(0,x):
         for j in range(0,y):
@@ -158,9 +188,9 @@ def BuildLatticeRectangularTub(x,y,z,volume_node):
     return lattice
 
 
-x = 10
-y = 10
-z = 10
+x = 11
+y = 20 
+z = 13
 
 b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1))
 b.Main(1000,100)
