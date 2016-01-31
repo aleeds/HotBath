@@ -107,7 +107,7 @@ class Big:
                 meanStd = self.TempStatistics()
                 mean = meanStd[0]
                 std = meanStd[1]
-                plt.show()
+                #plt.show()
                 times.append(t)
                 means.append(mean)
                 stds.append(std)
@@ -229,7 +229,7 @@ class Big:
         plt.clim()
         plt.title("Temperature of Bathtub (time_step:" + str(t) + ")\n")
         plt.plot([-2,self.y_size], [1,1], '-k')
-        plt.show()
+        #plt.show()
 
 
 
@@ -325,9 +325,9 @@ def plotDataPoints(times, data, data_name, sub_plot_num):
 
 
 
-x = int(32./3)
-y = int(48./3)
-z = int(25./3)
+x = int(32./1)
+y = int(48./1)
+z = int(25./1)
 
 body_pos_x = x/2
 body_pos_y = int(y*4./5)
@@ -347,10 +347,10 @@ plt.clf()
 
 faucet_x = x / 2
 faucet_y = 2
-faucet_width = 1
-faucet_length = 1
-faucet_temp = 74
-faucet_node_depth = 4 #z_size - 3
+faucet_width = 6
+faucet_length = 6
+faucet_temp = 79.5 
+faucet_node_depth = 23 #int(z/4.0) + 2#4 #z_size - 3
 mixing_frequency = 2000
 
 
@@ -365,12 +365,12 @@ bigData = []
 b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
         faucet_x, faucet_y, faucet_width, faucet_length,
         faucet_temp, faucet_node_depth)
-data = b.Main(1000,mixing_frequency,100)
+data = b.Main(400,mixing_frequency,30)
 plt.clf()
 plt.plot(data[0], data[1])
 plt.ylabel("Temperatures (C)")
 plt.xlabel("Time Step")
-plt.ylim((45,55))
+plt.ylim((35,53))
 plt.show()
 
 
