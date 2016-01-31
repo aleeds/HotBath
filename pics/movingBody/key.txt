@@ -9,4 +9,3 @@ body_pos_y = (4/5)y - first argument
 (7, 'Maroon')
 (8, 'Purple')
 (9, 'Gold')
-(10, 'Medium Violet Red')
