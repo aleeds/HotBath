@@ -87,7 +87,7 @@ class Big:
     # Simulates for t timesteps. It'll draw and save a frame every draw_save
     # timesteps.
     # Int -> Int -> Void
-    def Main(self, max_time_step, draw_save = 10000):
+    def Main(self, max_time_step, frequency, draw_save = 10000):
         times = []
         means = []
         stds = []
@@ -95,8 +95,8 @@ class Big:
             if t % 10 == 0:
                 print t
             self.step()
-            #self.MixingFrequency(t, 2000)
-            self.MixingOnCondition(50,5)
+            self.MixingFrequency(t, frequency)
+            #self.MixingOnCondition(50,5)
             self.switch_lattice()
             if t % draw_save == 0:
                 self.draw(int(self.x_size / 2.0),t)
@@ -351,6 +351,7 @@ faucet_width = 1
 faucet_length = 1
 faucet_temp = 74
 faucet_node_depth = 4 #z_size - 3
+frequency = 10
 
 bigData = []
 """for xx in range(0, z-2):
@@ -359,26 +360,66 @@ bigData = []
     data = b.Main(1000,100)
     bigData.append((data,xx))"""
 
+
+
+#Blue, Dark Green, Teal,
+#Deep Sky Blue, Lime, Cyan,
+#Indigo, Maroon, Purple,
+#Gold, Medium Violet Red, Saddle Brown
+colDic = {
+'#0000FF':'Blue',
+'#006400': 'Dark Green',
+'#008080': 'Teal',
+'#00BFFF':'Deep Sky Blue',
+'#00FF00':'Lime',
+'#00FFFF':'Cyan',
+'#4B0082':'Indigo',
+'#800000':'Maroon',
+'#800080':'Purple',
+'#FFD700':'Gold',
+'#C71585':'Medium Violet Red',
+'#8B4513':'Saddle Brown'}
+
+colors = ['#0000FF', '#006400', '#008080',
+          '#00BFFF', '#00FF00', '#00FFFF',
+          '#4B0082', '#800000', '#800080',
+          '#FFD700', 'C71585', '#8B4513']
+
+c = 0
+prints = []
+"""for freq in range(10,100,10):
+    print "Freq: " + str(freq)
+    b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
+            faucet_x, faucet_y, faucet_width, faucet_length,
+            faucet_temp, faucet_node_depth)
+    data = b.Main(1000, freq, 100)
+    bigData.append((data,freq,colors[c]))
+    prints.append((freq, colDic[colors[c]]))
+    c += 1"""
+
 for f_temp in range(50, 100, 10):
     b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
             faucet_x, faucet_y, faucet_width, faucet_length,
             f_temp, faucet_node_depth)
-    data = b.Main(1000,100)
-    bigData.append((data,f_temp))
-
+    data = b.Main(1000,frequency,100)
+    bigData.append((data,f_temp,colors[c]))
+    prints.append((f_temp, colDic[colors[c]]))
+    c += 1
+  
 plt.clf()
 times = []
 names = []
-ylow = 18
-yhigh = 80
-for xx in bigData:
-  plt.plot(xx[0][0], xx[0][1], label='Faucet Temp: ' + str(xx[1]))
-  times = xx[0][0]
+ylow = 20
+yhigh = 66
+for data in bigData:
+  plt.plot(data[0][0], data[0][1], label='Faucet Temps: ' + str(data[1]), color=data[2])
+  times = data[0][0]
   plt.ylim((ylow,yhigh))
 
+for p in prints:
+  print p
 for x in times:
   plt.plot([x, x], [ylow, yhigh], 'k')
-
 
 plt.xlabel("Time Step")
 plt.ylabel("Temperatures (C)")
