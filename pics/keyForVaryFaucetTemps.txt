@@ -1,0 +1,6 @@
+(50, 'Blue')
+(60, 'Dark Green')
+(70, 'Teal')
+(80, 'Deep Sky Blue')
+(90, 'Lime')
+

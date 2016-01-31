@@ -1,0 +1,10 @@
+(10, 'Blue'),
+(20, 'Dark Green'),
+(30, 'Teal'),
+(40, 'Deep Sky Blue'),
+(50, 'Lime'),
+(60, 'Cyan'),
+(70, 'Indigo'),
+(80, 'Maroon'),
+(90, 'Purple')
+
