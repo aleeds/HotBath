@@ -388,7 +388,7 @@ colors = ['#0000FF', '#006400', '#008080',
           
 c = 0
 prints = []
-"""for freq in range(10,100,10):
+for freq in range(10,100,10):
     print "Freq: " + str(freq)
     b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
             faucet_x, faucet_y, faucet_width, faucet_length,
@@ -396,24 +396,26 @@ prints = []
     data = b.Main(1000, freq, 100)
     bigData.append((data,freq,colors[c]))
     prints.append((freq, colDic[colors[c]]))
-    c += 1"""
+    c += 1
   
-for f_temp in range(50, 100, 10):
+"""for f_temp in range(50, 100, 10):
     b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
             faucet_x, faucet_y, faucet_width, faucet_length,
             f_temp, faucet_node_depth)
     data = b.Main(1000,frequency,100)
     bigData.append((data,f_temp,colors[c]))
     prints.append((f_temp, colDic[colors[c]]))
-    c += 1
+    c += 1"""
   
 plt.clf()
 times = []
 names = []
-ylow = 20
-yhigh = 66
+ylow = 0
+yhigh = 7
+#data[0][1] = means
+#data[0][2] = stds
 for data in bigData:
-  plt.plot(data[0][0], data[0][1], label='Faucet Temps: ' + str(data[1]), color=data[2])
+  plt.plot(data[0][0], data[0][2], label='Faucet Temps: ' + str(data[1]), color=data[2])
   times = data[0][0]
   plt.ylim((ylow,yhigh))
 
@@ -423,5 +425,6 @@ for x in times:
   plt.plot([x, x], [ylow, yhigh], 'k')
 
 plt.xlabel("Time Step")
-plt.ylabel("Temperatures (C)")
+#plt.ylabel("Temperatures (C)")
+plt.ylabel("Standard Deviations")
 plt.show()
