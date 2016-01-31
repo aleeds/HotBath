@@ -1,6 +1,5 @@
 # TODO Mixing by the person, by time/bath condition/etc
-# TODO begin experimenting with the various conditions, making sure it matches
-#      real life.
+# TODO bubbles
 # TODO the paper, the actual modelling.
 # TODO pictures
 
@@ -55,7 +54,7 @@ class Big:
         self.faucet_length = faucet_length #1
         self.faucet_temp = faucet_temp #74
         #self.faucet_node_depth = 4 #z_size - 3
-        self.faucet_node_depth = faucet_node_depth 
+        self.faucet_node_depth = faucet_node_depth
 
     # Just switches which lattice is being used. Will be called after every
     # time step.
@@ -112,7 +111,7 @@ class Big:
                 times.append(t)
                 means.append(mean)
                 stds.append(std)
-        return (times, means, stds) 
+        return (times, means, stds)
 
 
     # This function simply gets the neighbors of the Node node.
@@ -323,7 +322,7 @@ def plotDataPoints(times, data, data_name, sub_plot_num):
   plt.plot(times, data)
   plt.ylabel(data_name)
   #plt.show()
-  
+
 
 
 x = int(32./3)
@@ -366,7 +365,7 @@ bigData = []
 #Blue, Dark Green, Teal,
 #Deep Sky Blue, Lime, Cyan,
 #Indigo, Maroon, Purple,
-#Gold, Medium Violet Red, Saddle Brown 
+#Gold, Medium Violet Red, Saddle Brown
 colDic = {
 '#0000FF':'Blue',
 '#006400': 'Dark Green',
@@ -385,7 +384,7 @@ colors = ['#0000FF', '#006400', '#008080',
           '#00BFFF', '#00FF00', '#00FFFF',
           '#4B0082', '#800000', '#800080',
           '#FFD700', 'C71585', '#8B4513']
-          
+
 c = 0
 prints = []
 for freq in range(10,100,10):
@@ -398,6 +397,7 @@ for freq in range(10,100,10):
     prints.append((freq, colDic[colors[c]]))
     c += 1
   
+
 """for f_temp in range(50, 100, 10):
     b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
             faucet_x, faucet_y, faucet_width, faucet_length,
