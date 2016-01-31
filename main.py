@@ -1,6 +1,5 @@
 # TODO Mixing by the person, by time/bath condition/etc
-# TODO begin experimenting with the various conditions, making sure it matches
-#      real life.
+# TODO bubbles
 # TODO the paper, the actual modelling.
 # TODO pictures
 
@@ -55,7 +54,7 @@ class Big:
         self.faucet_length = faucet_length #1
         self.faucet_temp = faucet_temp #74
         #self.faucet_node_depth = 4 #z_size - 3
-        self.faucet_node_depth = faucet_node_depth 
+        self.faucet_node_depth = faucet_node_depth
 
     # Just switches which lattice is being used. Will be called after every
     # time step.
@@ -112,7 +111,7 @@ class Big:
                 times.append(t)
                 means.append(mean)
                 stds.append(std)
-        return (times, means, stds) 
+        return (times, means, stds)
 
 
     # This function simply gets the neighbors of the Node node.
@@ -323,7 +322,7 @@ def plotDataPoints(times, data, data_name, sub_plot_num):
   plt.plot(times, data)
   plt.ylabel(data_name)
   #plt.show()
-  
+
 
 
 x = int(32./3)
@@ -366,7 +365,7 @@ for f_temp in range(50, 100, 10):
             f_temp, faucet_node_depth)
     data = b.Main(1000,100)
     bigData.append((data,f_temp))
-  
+
 plt.clf()
 times = []
 names = []
