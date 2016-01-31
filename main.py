@@ -2,6 +2,7 @@
 # TODO begin experimenting with the various conditions, making sure it matches
 #      real life.
 # TODO the paper, the actual modelling.
+# TODO pictures
 
 
 import lattice
@@ -40,18 +41,21 @@ class Big:
     # just sets the variables. Need to come up with an elegant way to describe
     #the shape of the tub, that will allow us to raise the amount of lattice
     #nodes
-    def __init__(self,x_size,y_size,z_size,lattice):
+    def __init__(self,x_size,y_size,z_size,lattice,
+                 faucet_x, faucet_y, faucet_width,
+                 faucet_length, faucet_temp, faucet_node_depth):
         self.x_size = x_size
         self.y_size = y_size
         self.z_size = z_size
         self.lattices[0] = lattice
         self.lattices[1] = lattice
-        self.faucet_x = self.x_size / 2
-        self.faucet_y = 2
-        self.faucet_width = 1
-        self.faucet_length = 1
-        self.faucet_temp = 74
-        self.faucet_node_depth = 4 #z_size - 3
+        self.faucet_x = faucet_x #self.x_size / 2
+        self.faucet_y = faucet_y #2
+        self.faucet_width = faucet_width #1
+        self.faucet_length = faucet_length #1
+        self.faucet_temp = faucet_temp #74
+        #self.faucet_node_depth = 4 #z_size - 3
+        self.faucet_node_depth = faucet_node_depth 
 
     # Just switches which lattice is being used. Will be called after every
     # time step.
@@ -85,6 +89,9 @@ class Big:
     # timesteps.
     # Int -> Int -> Void
     def Main(self, max_time_step, draw_save = 10000):
+        times = []
+        means = []
+        stds = []
         for t in range(0,max_time_step):
             if t % 10 == 0:
                 print t
@@ -98,8 +105,14 @@ class Big:
                 #self.draw(10)
 
                 ##plt.savefig("first.png")
-                self.TempStatistics()
-                plt.show()
+                meanStd = self.TempStatistics()
+                mean = meanStd[0]
+                std = meanStd[1]
+                #plt.show()
+                times.append(t)
+                means.append(mean)
+                stds.append(std)
+        return (times, means, stds) 
 
 
     # This function simply gets the neighbors of the Node node.
@@ -193,6 +206,7 @@ class Big:
         plt.xlabel("Temp")
         plt.ylabel("Counts")
         plt.title("Mean: " + str(mean) + " std_dev: " + str(std_dev))
+        return (mean, std_dev)
     # This function will draw the data using matplotlib, plt.imshow() as used
     # the webpage
     # http://matplotlib.org/examples/pylab_examples/animation_demo.html
@@ -216,7 +230,7 @@ class Big:
         plt.clim()
         plt.title("Temperature of Bathtub (time_step:" + str(t) + ")\n")
         plt.plot([-2,self.y_size], [1,1], '-k')
-        plt.show()
+        #plt.show()
 
 
 
@@ -304,6 +318,14 @@ def MixingTwo(lattice,lens):
                     node.temp = lattice[pos.x][(pos.y + lens) % y_size ][pos.z].temp
 
 
+def plotDataPoints(times, data, data_name, sub_plot_num):
+  plt.subplot(sub_plot_num)
+  plt.plot(times, data)
+  plt.ylabel(data_name)
+  #plt.show()
+  
+
+
 x = int(32./3)
 y = int(48./3)
 z = int(25./3)
@@ -319,6 +341,46 @@ body_height = z/6  # z
 body = make_body(body_pos_x, body_pos_y, body_pos_z, body_width, body_length, body_height)
 
 
+#b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
+        #faucet_node_depth)
+#data = b.Main(100,10)
+plt.clf()
 
-b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body))
-b.Main(3000,300)
+faucet_x = x / 2
+faucet_y = 2
+faucet_width = 1
+faucet_length = 1
+faucet_temp = 74
+faucet_node_depth = 4 #z_size - 3
+
+bigData = []
+"""for xx in range(0, z-2):
+    b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
+            xx)
+    data = b.Main(1000,100)
+    bigData.append((data,xx))"""
+
+for f_temp in range(50, 100, 10):
+    b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
+            faucet_x, faucet_y, faucet_width, faucet_length,
+            f_temp, faucet_node_depth)
+    data = b.Main(1000,100)
+    bigData.append((data,f_temp))
+  
+plt.clf()
+times = []
+names = []
+ylow = 18
+yhigh = 80
+for xx in bigData:
+  plt.plot(xx[0][0], xx[0][1], label='Faucet Temp: ' + str(xx[1]))
+  times = xx[0][0]
+  plt.ylim((ylow,yhigh))
+
+for x in times:
+  plt.plot([x, x], [ylow, yhigh], 'k')
+
+
+plt.xlabel("Time Step")
+plt.ylabel("Temperatures (C)")
+plt.show()
