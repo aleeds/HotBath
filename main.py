@@ -107,7 +107,7 @@ class Big:
                 meanStd = self.TempStatistics()
                 mean = meanStd[0]
                 std = meanStd[1]
-                #plt.show()
+                plt.show()
                 times.append(t)
                 means.append(mean)
                 stds.append(std)
@@ -229,7 +229,7 @@ class Big:
         plt.clim()
         plt.title("Temperature of Bathtub (time_step:" + str(t) + ")\n")
         plt.plot([-2,self.y_size], [1,1], '-k')
-        #plt.show()
+        plt.show()
 
 
 
@@ -347,7 +347,7 @@ faucet_width = 1
 faucet_length = 1
 faucet_temp = 79.5 
 faucet_node_depth = 4 #int(z/4.0) + 2#4 #z_size - 3
-mixing_frequency = 2000
+mixing_frequency = 10
 
 
 
@@ -376,10 +376,22 @@ colors = ['#0000FF', '#006400', '#008080',
 
 c = 0
 prints = []
+bigData = []
 
 body = make_body(body_pos_x, body_pos_y, body_pos_z, body_width, body_length, body_height)
+
+b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
+        faucet_x, faucet_y, faucet_width, faucet_length,
+        faucet_temp, faucet_node_depth)
+data = b.Main(1000,mixing_frequency,100)
+bigData.append((data,c,colors[c]))
+prints.append((c, colDic[colors[c]]))
+
+
+
+
 #bodies = [body]
-bodies = []
+"""bodies = []
 print (x,y,z)
 print (body_pos_x, body_pos_y, body_pos_z)
 print(body_width, body_length, body_height)
@@ -389,15 +401,14 @@ for q in range(0, 10):
   print str(q)
   print str(body_pos_y-q)
   bodies.append(make_body(body_pos_x, body_pos_y - q, body_pos_z,
-               body_width, body_length, body_height))
+               body_width, body_length, body_height))"""
   
 
 #raw_input("pause")
 
-bigData = []
 #print bodies
 #print "Here"
-for body in bodies:
+"""for body in bodies:
     print "Body: " + str(c)
     print (x,y,z)
     print body
@@ -408,7 +419,7 @@ for body in bodies:
     data = b.Main(1000,mixing_frequency,100)
     bigData.append((data,c,colors[c]))
     prints.append((c, colDic[colors[c]]))
-    c += 1
+    c += 1"""
 
 
 #b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
