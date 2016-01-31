@@ -325,67 +325,32 @@ def plotDataPoints(times, data, data_name, sub_plot_num):
 
 
 
-x = int(32./1)
-y = int(48./1)
-z = int(25./1)
+x = int(32./3)
+y = int(48./3)
+z = int(25./3)
 
 body_pos_x = x/2
 body_pos_y = int(y*4./5)
 body_pos_z = int(z*2./3)
+#body_pos_x = int(x/2.0)
+#body_pos_y = int(y/2.0)
+#body_pos_z = int(z/2.0)
 
 body_width = x/4   # x
 body_length = y/6  # y
 body_height = z/6  # z
 
-body = make_body(body_pos_x, body_pos_y, body_pos_z, body_width, body_length, body_height)
-
-
-#b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
-        #faucet_node_depth)
-#data = b.Main(100,10)
-plt.clf()
 
 faucet_x = x / 2
 faucet_y = 2
-faucet_width = 6
-faucet_length = 6
+faucet_width = 1
+faucet_length = 1
 faucet_temp = 79.5 
-faucet_node_depth = 23 #int(z/4.0) + 2#4 #z_size - 3
-mixing_frequency = 2000
+faucet_node_depth = 4 #int(z/4.0) + 2#4 #z_size - 3
+mixing_frequency = 10
 
 
-bigData = []
-"""for xx in range(0, z-2):
-    b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
-            xx)
-    data = b.Main(1000,100)
-    bigData.append((data,xx))"""
 
-
-b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
-        faucet_x, faucet_y, faucet_width, faucet_length,
-        faucet_temp, faucet_node_depth)
-data = b.Main(400,mixing_frequency,30)
-plt.clf()
-plt.plot(data[0], data[1])
-plt.ylabel("Temperatures (C)")
-plt.xlabel("Time Step")
-plt.ylim((35,53))
-plt.show()
-
-plt.clf()
-plt.plot(data[0], data[1])
-plt.ylabel("Temperatures (C)")
-plt.xlabel("Time Step")
-plt.show()
-
-
-raw_input("pause")
-
-#Blue, Dark Green, Teal,
-#Deep Sky Blue, Lime, Cyan,
-#Indigo, Maroon, Purple,
-#Gold, Medium Violet Red, Saddle Brown
 colDic = {
 '#0000FF':'Blue',
 '#006400': 'Dark Green',
@@ -400,13 +365,86 @@ colDic = {
 '#C71585':'Medium Violet Red',
 '#8B4513':'Saddle Brown'}
 
+#Blue, Dark Green, Teal,
+#Deep Sky Blue, Lime, Cyan,
+#Indigo, Maroon, Purple,
+#Gold, Medium Violet Red, Saddle Brown
 colors = ['#0000FF', '#006400', '#008080',
           '#00BFFF', '#00FF00', '#00FFFF',
           '#4B0082', '#800000', '#800080',
-          '#FFD700', 'C71585', '#8B4513']
+          '#FFD700', '#C71585', '#8B4513']
 
 c = 0
 prints = []
+
+body = make_body(body_pos_x, body_pos_y, body_pos_z, body_width, body_length, body_height)
+#bodies = [body]
+bodies = []
+print (x,y,z)
+print (body_pos_x, body_pos_y, body_pos_z)
+print(body_width, body_length, body_height)
+cap = min(int((x-2)/2.0), int((y-2)/2.0), int((z-2)/2.0))
+for q in range(9, 10):
+  #print (q, tmpX, tmpY, tmpZ)
+  print str(q)
+  print str(body_pos_y-q)
+  bodies.append(make_body(body_pos_x, body_pos_y - q, body_pos_z,
+               body_width, body_length, body_height))
+  
+
+#raw_input("pause")
+
+bigData = []
+#print bodies
+#print "Here"
+for body in bodies:
+    print "Body: " + str(c)
+    print (x,y,z)
+    print body
+    #raw_input("pause")
+    b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
+            faucet_x, faucet_y, faucet_width, faucet_length,
+            faucet_temp, faucet_node_depth)
+    data = b.Main(1000,mixing_frequency,100)
+    bigData.append((data,c,colors[c]))
+    prints.append((c, colDic[colors[c]]))
+    c += 1
+
+
+#b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
+        #faucet_node_depth)
+#data = b.Main(100,10)
+plt.clf()
+
+
+
+"""for xx in range(0, z-2):
+    b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
+            xx)
+    data = b.Main(1000,100)
+    bigData.append((data,xx))"""
+
+
+"""b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
+        faucet_x, faucet_y, faucet_width, faucet_length,
+        faucet_temp, faucet_node_depth)
+data = b.Main(400,mixing_frequency,30)
+plt.clf()
+plt.plot(data[0], data[1])
+plt.ylabel("Temperatures (C)")
+plt.xlabel("Time Step")
+plt.ylim((35,53))
+plt.show()
+
+plt.clf()
+plt.plot(data[0], data[1])
+plt.ylabel("Temperatures (C)")
+plt.xlabel("Time Step")
+plt.show()"""
+
+
+#raw_input("pause")
+
 """for freq in range(10,100,10):
     print "Freq: " + str(freq)
     b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
@@ -426,16 +464,18 @@ prints = []
     bigData.append((data,f_temp,colors[c]))
     prints.append((f_temp, colDic[colors[c]]))
     c += 1"""
+
+  
   
 plt.clf()
 times = []
 names = []
 ylow = 40
-yhigh = 65
+yhigh = 55
 #data[0][1] = means
 #data[0][2] = stds
 for data in bigData:
-  plt.plot(data[0][0], data[0][2], label='Faucet Temps: ' + str(data[1]), color=data[2])
+  plt.plot(data[0][0], data[0][1], label='Faucet Temps: ' + str(data[1]), color=data[2])
   times = data[0][0]
   plt.ylim((ylow,yhigh))
 
@@ -448,3 +488,6 @@ plt.xlabel("Time Step")
 plt.ylabel("Temperatures (C)")
 #plt.ylabel("Standard Deviations")
 plt.show()
+
+
+
