@@ -351,7 +351,7 @@ faucet_width = 1
 faucet_length = 1
 faucet_temp = 74
 faucet_node_depth = 4 #z_size - 3
-mixing_frequency = 10
+mixing_frequency = 2000
 
 
 bigData = []
@@ -365,7 +365,13 @@ bigData = []
 b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
         faucet_x, faucet_y, faucet_width, faucet_length,
         faucet_temp, faucet_node_depth)
-b.Main(1000,mixing_frequency,100)
+data = b.Main(1000,mixing_frequency,100)
+plt.clf()
+plt.plot(data[0], data[1])
+plt.ylabel("Temperatures (C)")
+plt.xlabel("Time Step")
+plt.ylim((45,55))
+plt.show()
 
 
 raw_input("pause")
@@ -406,14 +412,14 @@ prints = []
     c += 1"""
   
 
-for f_temp in range(50, 100, 10):
+"""for f_temp in range(50, 100, 10):
     b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
             faucet_x, faucet_y, faucet_width, faucet_length,
             f_temp, faucet_node_depth)
     data = b.Main(200,mixing_frequency,100)
     bigData.append((data,f_temp,colors[c]))
     prints.append((f_temp, colDic[colors[c]]))
-    c += 1
+    c += 1"""
   
 plt.clf()
 times = []
