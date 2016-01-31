@@ -107,7 +107,7 @@ class Big:
                 meanStd = self.TempStatistics()
                 mean = meanStd[0]
                 std = meanStd[1]
-                #plt.show()
+                plt.show()
                 times.append(t)
                 means.append(mean)
                 stds.append(std)
@@ -229,7 +229,7 @@ class Big:
         plt.clim()
         plt.title("Temperature of Bathtub (time_step:" + str(t) + ")\n")
         plt.plot([-2,self.y_size], [1,1], '-k')
-        #plt.show()
+        plt.show()
 
 
 
@@ -351,7 +351,8 @@ faucet_width = 1
 faucet_length = 1
 faucet_temp = 74
 faucet_node_depth = 4 #z_size - 3
-frequency = 10
+mixing_frequency = 10
+
 
 bigData = []
 """for xx in range(0, z-2):
@@ -361,6 +362,13 @@ bigData = []
     bigData.append((data,xx))"""
 
 
+b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
+        faucet_x, faucet_y, faucet_width, faucet_length,
+        faucet_temp, faucet_node_depth)
+b.Main(1000,mixing_frequency,100)
+
+
+raw_input("pause")
 
 #Blue, Dark Green, Teal,
 #Deep Sky Blue, Lime, Cyan,
@@ -402,7 +410,7 @@ for f_temp in range(50, 100, 10):
     b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
             faucet_x, faucet_y, faucet_width, faucet_length,
             f_temp, faucet_node_depth)
-    data = b.Main(200,frequency,100)
+    data = b.Main(200,mixing_frequency,100)
     bigData.append((data,f_temp,colors[c]))
     prints.append((f_temp, colDic[colors[c]]))
     c += 1
