@@ -346,8 +346,8 @@ faucet_y = 2
 faucet_width = 1
 faucet_length = 1
 faucet_temp = 79.5 
-faucet_node_depth = 4 #int(z/4.0) + 2#4 #z_size - 3
-mixing_frequency = 10
+faucet_node_depth = 0 #int(z/4.0) + 2#4 #z_size - 3
+mixing_frequency = 2000
 
 
 
@@ -481,7 +481,7 @@ plt.show()"""
 plt.clf()
 times = []
 names = []
-ylow = 40
+ylow = 20
 yhigh = 60 
 #data[0][1] = means
 #data[0][2] = stds
