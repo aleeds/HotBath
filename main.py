@@ -107,7 +107,7 @@ class Big:
                 meanStd = self.TempStatistics()
                 mean = meanStd[0]
                 std = meanStd[1]
-                plt.show()
+                #plt.show()
                 times.append(t)
                 means.append(mean)
                 stds.append(std)
@@ -229,7 +229,7 @@ class Big:
         plt.clim()
         plt.title("Temperature of Bathtub (time_step:" + str(t) + ")\n")
         plt.plot([-2,self.y_size], [1,1], '-k')
-        plt.show()
+        #plt.show()
 
 
 
@@ -492,8 +492,8 @@ for data in bigData:
 
 for p in prints:
   print p
-for x in times:
-  plt.plot([x, x], [ylow, yhigh], 'k')
+#for x in times:
+  #plt.plot([x, x], [ylow, yhigh], 'k')
 
 plt.xlabel("Time Step")
 plt.ylabel("Temperatures (C)")
