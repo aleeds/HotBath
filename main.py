@@ -378,6 +378,15 @@ c = 0
 prints = []
 bigData = []
 
+
+plt.clf()
+plt.plot([40,45,50,55,60],[59.25, 69.25, 79.5, 89.5, 99.5])
+plt.xlabel("Desired Bath Temperature")
+plt.ylabel("Faucet Temperatures (C)")
+plt.ylim((55, 100))
+plt.show()
+raw_input("pause")
+
 body = make_body(body_pos_x, body_pos_y, body_pos_z, body_width, body_length, body_height)
 
 b = Big(x,y,z,BuildLatticeRectangularTub(x,y,z,1,body),
@@ -499,6 +508,7 @@ plt.xlabel("Time Step")
 plt.ylabel("Temperatures (C)")
 #plt.ylabel("Standard Deviations")
 plt.show()
+
 
 
 

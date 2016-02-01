@@ -1,5 +1,5 @@
 temp for 40 bath : 59.25 
 temp for 45 bath : 69.25
-temp for 50 bath : 79.25
+temp for 50 bath : 79.5
 temp for 55 bath : 89.5
 temp for 60 bath : 99.5
