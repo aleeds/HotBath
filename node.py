@@ -87,9 +87,6 @@ class Node(Lattice):
 
   #Node -> Float
   def air_water(self, n):
-    sa1 = 1000.0
-    sa2 = 1200.0
-    #q = (Hc_water_air * self.Area * (self.temp - n.temp))/sa2
     q = (Hc_water_air * self.Area * (self.temp - n.temp))/1000.0
     return q
     #might need standard conduction
@@ -109,10 +106,8 @@ class Node(Lattice):
   #Node -> Float
   def water_water(self, n):
     time_step = 1
-    doffset = .3
-    offset = 31000
-    q_conduction = water_k[self.temp]/30000.0*self.Area*(self.temp - n.temp)*time_step/(self.d+offset)
-    q_convection = Hc_water_water * (self.temp - n.temp) * self.Area / (30000+offset)
+    q_conduction = water_k[self.temp]/30000.0*self.Area*(self.temp - n.temp)*time_step/self.d
+    q_convection = Hc_water_water * (self.temp - n.temp) * self.Area / 30000.0
 
     #q_conduction = water_k[self.temp]/30000.0*self.Area*(self.temp - n.temp)*time_step/self.d
     #q_convection = Hc_water_water * (self.temp - n.temp) * self.Area / 30000

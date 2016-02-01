@@ -233,7 +233,7 @@ class Big:
 
 
 
-def_temp = 50
+def_temp = 55
 room_temp = 21
 
 def volume_tub(x,y,z,volume_node):
@@ -345,7 +345,7 @@ faucet_x = x / 2
 faucet_y = 2
 faucet_width = 1
 faucet_length = 1
-faucet_temp = 79.5
+faucet_temp = 89.5
 faucet_node_depth = 4 #int(z/4.0) + 2#4 #z_size - 3
 mixing_frequency = 20000
 
@@ -481,12 +481,12 @@ plt.show()"""
 plt.clf()
 times = []
 names = []
-ylow = 0
-yhigh = 10
+ylow = 50
+yhigh = 60
 #data[0][1] = means
 #data[0][2] = stds
 for data in bigData:
-  plt.plot(data[0][0], data[0][2], label='Sensitivity Analysis: ' + str(data[1]), color=data[2])
+  plt.plot(data[0][0], data[0][1], label='Sensitivity Analysis: ' + str(data[1]), color=data[2])
   times = data[0][0]
   plt.ylim((ylow,yhigh))
 
@@ -496,8 +496,8 @@ for p in prints:
   #plt.plot([x, x], [ylow, yhigh], 'k')
 
 plt.xlabel("Time Step")
-#plt.ylabel("Temperatures (C)")
-plt.ylabel("Standard Deviations")
+plt.ylabel("Temperatures (C)")
+#plt.ylabel("Standard Deviations")
 plt.show()
 
 
