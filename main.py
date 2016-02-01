@@ -107,7 +107,7 @@ class Big:
                 meanStd = self.TempStatistics()
                 mean = meanStd[0]
                 std = meanStd[1]
-                plt.show()
+                #plt.show()
                 times.append(t)
                 means.append(mean)
                 stds.append(std)
@@ -229,11 +229,11 @@ class Big:
         plt.clim()
         plt.title("Temperature of Bathtub (time_step:" + str(t) + ")\n")
         plt.plot([-2,self.y_size], [1,1], '-k')
-        plt.show()
+        #plt.show()
 
 
 
-def_temp = 55
+def_temp = 40
 room_temp = 21
 
 def volume_tub(x,y,z,volume_node):
@@ -345,7 +345,7 @@ faucet_x = x / 2
 faucet_y = 2
 faucet_width = 1
 faucet_length = 1
-faucet_temp = 89.5
+faucet_temp = 59.25
 faucet_node_depth = 4 #int(z/4.0) + 2#4 #z_size - 3
 mixing_frequency = 20000
 
@@ -481,8 +481,8 @@ plt.show()"""
 plt.clf()
 times = []
 names = []
-ylow = 50
-yhigh = 60
+ylow = 35
+yhigh = 45
 #data[0][1] = means
 #data[0][2] = stds
 for data in bigData:
