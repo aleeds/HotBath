@@ -1,0 +1,5 @@
+1 1 4 79.5 no_mix
+doffset = 0|2
+offset = 0|31000
+q_conduction = water_k[self.temp]/30000.0*self.Area*(self.temp - n.temp)*time_step/(self.d+offset)
+q_convection = Hc_water_water * (self.temp - n.temp) * self.Area / (30000+offset)

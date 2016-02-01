@@ -107,7 +107,7 @@ class Big:
                 meanStd = self.TempStatistics()
                 mean = meanStd[0]
                 std = meanStd[1]
-                #plt.show()
+                plt.show()
                 times.append(t)
                 means.append(mean)
                 stds.append(std)
@@ -229,7 +229,7 @@ class Big:
         plt.clim()
         plt.title("Temperature of Bathtub (time_step:" + str(t) + ")\n")
         plt.plot([-2,self.y_size], [1,1], '-k')
-        #plt.show()
+        plt.show()
 
 
 
@@ -345,9 +345,9 @@ faucet_x = x / 2
 faucet_y = 2
 faucet_width = 1
 faucet_length = 1
-faucet_temp = 79.5 
-faucet_node_depth = 0 #int(z/4.0) + 2#4 #z_size - 3
-mixing_frequency = 2000
+faucet_temp = 79.5
+faucet_node_depth = 4 #int(z/4.0) + 2#4 #z_size - 3
+mixing_frequency = 20000
 
 
 
@@ -481,12 +481,12 @@ plt.show()"""
 plt.clf()
 times = []
 names = []
-ylow = 20
-yhigh = 60 
+ylow = 0
+yhigh = 10
 #data[0][1] = means
 #data[0][2] = stds
 for data in bigData:
-  plt.plot(data[0][0], data[0][1], label='Faucet Temps: ' + str(data[1]), color=data[2])
+  plt.plot(data[0][0], data[0][2], label='Sensitivity Analysis: ' + str(data[1]), color=data[2])
   times = data[0][0]
   plt.ylim((ylow,yhigh))
 
@@ -496,8 +496,8 @@ for p in prints:
   #plt.plot([x, x], [ylow, yhigh], 'k')
 
 plt.xlabel("Time Step")
-plt.ylabel("Temperatures (C)")
-#plt.ylabel("Standard Deviations")
+#plt.ylabel("Temperatures (C)")
+plt.ylabel("Standard Deviations")
 plt.show()
 
 
